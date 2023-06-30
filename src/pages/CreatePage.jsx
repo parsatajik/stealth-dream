@@ -29,9 +29,7 @@ const getRandomElement = (arr) => {
   return arr[Math.floor(Math.random() * arr.length)];
 };
 
-const stripePromise = loadStripe(
-  "pk_test_51McIDRKRFMD1LqLFlRDOI9Ls90cNL1ywncoLOAqXOLv4SirnVN2T0355kZnx4FsgE6l6avt7UqvioVvTJ0WMtdYw00T2LnxRTX"
-);
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
 const stripeAppearance = {
   theme: "stripe",
@@ -244,7 +242,7 @@ const CreatePage = ({ isAffiliate }) => {
           gridTemplateColumns={dreamImagesGridTemplateColumns}
           maxW="80%"
           mt="40px"
-          mb="60px"
+          mb="40px"
         >
           {dreamImgs?.map((img, i) => (
             <Image
