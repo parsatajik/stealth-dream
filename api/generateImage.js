@@ -7,15 +7,14 @@ export default async function generateImage(req, res) {
       "https://api.openai.com/v1/images/generations",
       {
         prompt: dream,
-        n: 1,
-        size: "256x256",
+        n: 3,
+        size: "1024x1024",
       },
       {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${process.env.OPENAI_TOKEN}`,
         },
-        timeout: 10000,
       }
     );
 
