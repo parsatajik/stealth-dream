@@ -1,3 +1,5 @@
+// TODO: compartmentalize this file
+
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import {
@@ -12,6 +14,8 @@ import {
   InputRightElement,
   Progress,
   Text,
+  Textarea,
+  Select,
   useBreakpointValue,
 } from "@chakra-ui/react";
 import { Elements } from "@stripe/react-stripe-js";
@@ -21,6 +25,7 @@ import CheckoutForm from "../components/CheckoutForm";
 import Tip from "../components/Tip";
 import TShirtMockup from "../components/TShirtMockUp";
 import Gallery from "../components/Gallery";
+import mixpanel from "mixpanel-browser";
 import { db } from "../firebase";
 import { collection, query, where, getDocs, limit } from "firebase/firestore";
 import { COLORS, SIZES, SURPRISE_ME_PROMPTS, TIPS } from "../constants";
@@ -35,9 +40,23 @@ const stripeAppearance = {
   theme: "stripe",
 };
 
-export const affiliateLoader = async ({ params }) => {
+export const loader = async ({ params }) => {
   const username = params.username;
-  return { affiliate: username };
+
+  const purchasesQuery = query(
+    collection(db, "purchases"),
+    where("isShareable", "==", true),
+    limit(100)
+  );
+
+  const purchasesSnapshot = await getDocs(purchasesQuery);
+
+  const purchasesImages = purchasesSnapshot.docs.map((doc) => ({
+    url: doc.data().selectedImage,
+    alt: doc.data().prompt,
+  }));
+
+  return { affiliate: username, images: purchasesImages };
 };
 
 const CreatePage = ({ isAffiliate }) => {
@@ -46,13 +65,16 @@ const CreatePage = ({ isAffiliate }) => {
   const [dreamImgs, setDreamImgs] = useState([]);
   const [tip, setTip] = useState(getRandomElement(TIPS));
   const [selectedImg, setSelectedImg] = useState(null);
-  const [images, setImages] = useState([]);
   const [selectedColor, setSelectedColor] = useState("black");
   const [selectedSize, setSelectedSize] = useState("");
+  const [selectedQuantity, setSelectedQuantity] = useState(1);
   const [stripeClientSecret, setStripeClientSecret] = useState("");
+  const [stripePaymentIntentId, setStripePaymentIntentId] = useState("");
   const [shareCreation, setShareCreation] = useState(true);
 
-  const affiliate = isAffiliate ? useLoaderData().affiliate : null;
+  const loaderData = useLoaderData();
+  const affiliate = isAffiliate ? loaderData?.affiliate : null;
+  const images = loaderData?.images;
 
   const dreamImagesGridTemplateColumns = useBreakpointValue({
     base: "1fr",
@@ -62,11 +84,6 @@ const CreatePage = ({ isAffiliate }) => {
   const customizeShirtFlexDir = useBreakpointValue({
     base: "column",
     md: "row",
-  });
-
-  const sizesFlexDir = useBreakpointValue({
-    base: "row",
-    md: "column",
   });
 
   const inputFontSize = useBreakpointValue({
@@ -89,6 +106,16 @@ const CreatePage = ({ isAffiliate }) => {
     md: "Make my shirt!",
   });
 
+  const sizesGridTemplateColumns = useBreakpointValue({
+    base: "repeat(3, 1fr)",
+    md: "1fr",
+  });
+
+  const isMobile = useBreakpointValue({
+    base: true,
+    md: false,
+  });
+
   const fetchImage = async (dream) => {
     try {
       const response = await axios.post(
@@ -102,9 +129,14 @@ const CreatePage = ({ isAffiliate }) => {
           },
         }
       );
+
+      mixpanel.track("Image Generation", {
+        prompt: dream,
+      });
+
       return response.data.data;
     } catch (e) {
-      console.log(e);
+      console.error(e);
     }
   };
 
@@ -141,30 +173,10 @@ const CreatePage = ({ isAffiliate }) => {
   }, [dreamImgs]);
 
   useEffect(() => {
-    const fetchPurchases = async () => {
-      const purchasesQuery = query(
-        collection(db, "purchases"),
-        where("isShareable", "==", true),
-        limit(100)
-      );
-
-      const purchasesSnapshot = await getDocs(purchasesQuery);
-
-      const purchasesImages = purchasesSnapshot.docs.map((doc) => ({
-        url: doc.data().selectedImage,
-        alt: doc.data().prompt,
-      }));
-
-      setImages([...purchasesImages, ...purchasesImages]);
-    };
-
-    fetchPurchases();
-  }, []); // Dependency array is empty, so this effect runs once on mount
-
-  useEffect(() => {
     const fetchStripeClientSecret = async () => {
       const { data } = await axios.post("/api/createPaymentIntent");
       setStripeClientSecret(data.clientSecret);
+      setStripePaymentIntentId(data.id);
     };
 
     if (stripeClientSecret.length === 0) fetchStripeClientSecret();
@@ -180,42 +192,81 @@ const CreatePage = ({ isAffiliate }) => {
         <Text fontSize="sm" as="i" color="blackAlpha.600">
           Start with a detailed description
         </Text>
-        <Button size="xs" onClick={handleSurpriseMe}>
-          Surprise me
-        </Button>
+        {!isMobile && (
+          <Button size="xs" onClick={handleSurpriseMe}>
+            Surprise me
+          </Button>
+        )}
       </Stack>
 
-      <InputGroup size="lg" mt="20px" maxW="80%" boxShadow="md">
-        <Input
-          placeholder={inputPlaceHolder}
-          fontSize={inputFontSize}
-          maxW="90%"
-          bg="rgba(255, 255, 255, 0.8)"
-          border="none"
-          focusBorderColor="transparent"
-          value={dreamInput}
-          onChange={(e) => setDreamInput(e.target.value)}
-          onKeyDown={async (e) => {
-            if (e.key === "Enter" && dreamInput.length) {
-              handleDesignCreation();
-            }
-          }}
-        />
-        <InputRightElement width="auto">
+      {isMobile ? (
+        <Box mt="20px" w="80%" boxShadow="md" borderRadius="5px">
+          <Textarea
+            size="lg"
+            minH="110px"
+            borderBottomRadius="0"
+            value={dreamInput}
+            onChange={(e) => setDreamInput(e.target.value)}
+            w="100%"
+            resize="none"
+            m="0"
+            fontSize="md"
+          />
           <Button
+            w="100%"
+            colorScheme="white"
+            size="lg"
+            color="black"
+            borderTopRadius="0"
+            fontSize="md"
+            onClick={handleSurpriseMe}
+          >
+            Surprise Me
+          </Button>
+
+          {/* <Button
             onClick={handleDesignCreation}
-            bgColor={dreamInput === "" ? "transparent" : "blackAlpha.800"}
-            borderLeft="1px solid grey"
-            borderRadius="0"
-            color={dreamInput === "" ? "blackAlpha.600" : "white"}
-            h="100%"
+            w="100%"
             fontSize={inputFontSize}
             size={makeMyShirtButtonSize}
+            mt="10px"
           >
-            {makeMyShirtButtonText}
-          </Button>
-        </InputRightElement>
-      </InputGroup>
+            {dreamImgs.length ? "Try again!" : makeMyShirtButtonText}
+          </Button> */}
+        </Box>
+      ) : (
+        <InputGroup size="lg" mt="20px" maxW="80%" boxShadow="md">
+          <Input
+            placeholder={inputPlaceHolder}
+            fontSize={inputFontSize}
+            maxW="90%"
+            bg="rgba(255, 255, 255, 0.8)"
+            border="none"
+            focusBorderColor="transparent"
+            value={dreamInput}
+            onChange={(e) => setDreamInput(e.target.value)}
+            onKeyDown={async (e) => {
+              if (e.key === "Enter" && dreamInput.length) {
+                handleDesignCreation();
+              }
+            }}
+          />
+          <InputRightElement width="auto">
+            <Button
+              onClick={handleDesignCreation}
+              bgColor={dreamInput === "" ? "transparent" : "blackAlpha.800"}
+              borderLeft="1px solid grey"
+              borderRadius="0"
+              color={dreamInput === "" ? "blackAlpha.600" : "white"}
+              h="100%"
+              fontSize={inputFontSize}
+              size={makeMyShirtButtonSize}
+            >
+              {dreamImgs.length ? "Try again!" : makeMyShirtButtonText}
+            </Button>
+          </InputRightElement>
+        </InputGroup>
+      )}
 
       {requestActive && (
         <Box maxW="80%" w="100%">
@@ -248,12 +299,11 @@ const CreatePage = ({ isAffiliate }) => {
             <Image
               key={i}
               src={img.url}
-              borderWidth={
-                selectedImg && selectedImg === img?.url ? "10px" : "0px"
+              border={
+                !selectedImg || selectedImg !== img?.url ? "" : "2px solid cyan"
               }
-              borderColor="blackAlpha.500"
               opacity={!selectedImg || selectedImg !== img?.url ? "1" : "0.7"}
-              _hover={{ opacity: "0.7", border: "1px solid #7928CA" }}
+              _hover={{ opacity: "0.7", border: "2px solid cyan" }}
               onClick={() => setSelectedImg(img.url)}
             />
           ))}
@@ -310,7 +360,13 @@ const CreatePage = ({ isAffiliate }) => {
               <Text fontSize="m" fontWeight="bold" mb="15px">
                 Size
               </Text>
-              <Stack direction={sizesFlexDir} spacing="15px">
+              <Box
+                display="grid"
+                gridTemplateColumns={sizesGridTemplateColumns}
+                gap="15px"
+                spacing="15px"
+                mb="15px"
+              >
                 {SIZES.map((size, i) => (
                   <Button
                     title={`Size ${size}`}
@@ -333,7 +389,21 @@ const CreatePage = ({ isAffiliate }) => {
                     {size}
                   </Button>
                 ))}
-              </Stack>
+              </Box>
+              <Text fontSize="m" fontWeight="bold" mb="15px">
+                Quantity
+              </Text>
+              <Select
+                onChange={(e) => setSelectedQuantity(e.target.value)}
+                border="1px solid black"
+                borderRadius="0"
+              >
+                {Array.from(Array(20).keys()).map((i) => (
+                  <option key={`quantity-${i}`} value={i + 1}>
+                    {i + 1}
+                  </option>
+                ))}
+              </Select>
             </Box>
           </Box>
         </>
@@ -382,9 +452,11 @@ const CreatePage = ({ isAffiliate }) => {
               selectedImage={selectedImg}
               selectedColor={selectedColor}
               selectedSize={selectedSize}
+              selectedQuantity={selectedQuantity}
               dreamInput={dreamInput}
               isShareable={shareCreation}
               affiliate={affiliate}
+              paymentIntentId={stripePaymentIntentId}
             />
           </Elements>
         </>
@@ -394,7 +466,11 @@ const CreatePage = ({ isAffiliate }) => {
         <Text fontSize="2xl" fontWeight="bold" mb="20px" w="80%">
           Recent Creations
         </Text>
-        <Gallery images={images} />
+        <Gallery
+          images={images}
+          setDreamInput={setDreamInput}
+          handleDesignCreation={handleDesignCreation}
+        />
       </Box>
     </>
   );

@@ -1,6 +1,6 @@
 import React from "react";
 import { Button, Box, Heading, Text, Link, Stack } from "@chakra-ui/react";
-import { FaFacebookF, FaTwitter, FaInstagram } from "react-icons/fa";
+import { FaFacebookF, FaTwitter, FaInstagram, FaTiktok } from "react-icons/fa";
 
 const ThankYouPage = () => {
   return (
@@ -24,23 +24,16 @@ const ThankYouPage = () => {
       </Button>
       <Text mb={2}>Share your experience with us:</Text>
       <Stack spacing={2} mb={4} direction="row">
-        <Link href="https://www.facebook.com/YourBusinessName" isExternal>
-          <FaFacebookF size="24px" />
-        </Link>
-        <Link href="https://www.twitter.com/YourBusinessName" isExternal>
+        <Link href="https://www.twitter.com/arteficeai" isExternal>
           <FaTwitter size="24px" />
         </Link>
-        <Link href="https://www.instagram.com/YourBusinessName" isExternal>
+        <Link href="https://www.instagram.com/arteficeai" isExternal>
           <FaInstagram size="24px" />
         </Link>
+        <Link href="https://www.tiktok.com/@arteficeai" isExternal>
+          <FaTiktok size="24px" />
+        </Link>
       </Stack>
-      {/* <Button
-        as="a"
-        href="https://www.google.com/search?q=YourBusinessName&rlz=1C1GCEV_en&sxsrf=AOaemvKihpU7rmam5_R5rqQ4-9S1gOl-ZA:1638596414075&source=lnt&tbs=lf:1,lf_ui:2&tbm=lcl&rflfq=1&num=10&rldimm=12157529923004273250&lqi=Cg5Zb3VyQnVzaW5lc3NOYW1ligELC3NlYXJjaC1hZHNyZgKDA1AAEAEYAhgKGmNvbW1lcmNpYWxfbG9jYWxfcmVzdWx0EAEQAhADGAAYARgCGAMiCg5Zb3VyQnVzaW5lc3NOYW1lUgA"
-        colorScheme="green"
-      >
-        Write a Google Review
-      </Button> */}
     </Box>
   );
 };

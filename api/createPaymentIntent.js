@@ -11,6 +11,7 @@ export default async (req, res) => {
 
     res.status(200).send({
       clientSecret: paymentIntent.client_secret,
+      id: paymentIntent.id,
     });
   } catch (err) {
     console.log(err);

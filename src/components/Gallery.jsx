@@ -2,7 +2,7 @@ import React from "react";
 import { Box, useBreakpointValue } from "@chakra-ui/react";
 import GalleryItem from "./GalleryItem";
 
-const Gallery = ({ images }) => {
+const Gallery = ({ images, setDreamInput, handleDesignCreation }) => {
   const gridTemplateColumns = useBreakpointValue({
     base: "repeat(2, 1fr)",
     md: "repeat(5, 1fr)",
@@ -10,8 +10,14 @@ const Gallery = ({ images }) => {
 
   return (
     <Box display="grid" gridGap="2" gridTemplateColumns={gridTemplateColumns}>
-      {images.map((image, index) => (
-        <GalleryItem key={index} index={index} image={image} />
+      {images?.map((image, index) => (
+        <GalleryItem
+          key={index}
+          index={index}
+          image={image}
+          setDreamInput={setDreamInput}
+          handleDesignCreation={handleDesignCreation}
+        />
       ))}
     </Box>
   );

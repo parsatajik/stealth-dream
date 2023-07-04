@@ -27,15 +27,18 @@ import {
   updateDoc,
   getDocs,
 } from "@firebase/firestore";
+import mixpanel from "mixpanel-browser";
 import { db } from "../firebase";
 
 const CheckoutForm = ({
   selectedImage,
   selectedColor,
   selectedSize,
+  selectedQuantity,
   dreamInput,
   isShareable,
   affiliate,
+  paymentIntentId,
 }) => {
   const [email, setEmail] = useState("");
   const [customerInfo, setCustomerInfo] = useState({});
@@ -44,6 +47,18 @@ const CheckoutForm = ({
   const stripe = useStripe();
   const elements = useElements();
   const navigate = useNavigate();
+
+  const sendPaymentReceipt = async () => {
+    try {
+      await axios.post(`/api/updatePaymentIntent`, {
+        email,
+        paymentIntentId,
+      });
+    } catch (err) {
+      console.error("An error occurred while sending the payment receipt.");
+      console.error(err);
+    }
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -59,12 +74,13 @@ const CheckoutForm = ({
     });
 
     if (error) {
-      console.log(error);
+      console.error(error);
       setIsLoading(false);
       alert("There was an error with processing your payment.");
     } else {
-      console.log("success");
       try {
+        await sendPaymentReceipt();
+
         const response = await axios.post(
           "/api/storeImage",
           { imageUrl: selectedImage },
@@ -84,13 +100,12 @@ const CheckoutForm = ({
           prompt: dreamInput,
           selectedColor,
           selectedSize,
+          selectedQuantity,
           selectedImage: imageData,
           isShareable,
         };
 
         const docRef = await addDoc(collection(db, "purchases"), purchase);
-
-        console.log("Purchase Document written with ID: ", docRef.id);
 
         if (affiliate) {
           const q = query(
@@ -110,7 +125,7 @@ const CheckoutForm = ({
 
         navigate("/thank-you");
       } catch (err) {
-        console.log(err);
+        console.error(err);
       } finally {
         setIsLoading(false);
       }

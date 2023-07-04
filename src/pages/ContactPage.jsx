@@ -55,10 +55,23 @@ const ContactUsPage = () => {
 
   return (
     <>
-      <Text fontSize="4xl" fontWeight="bold" mb="40px" mt="60px">
+      <Text fontSize="4xl" fontWeight="bold" mb="20px" mt="60px">
         Contact Us
       </Text>
-      <Box w="80%" h="80%" ml="auto" mr="auto" p="40px" bgColor="blackAlpha.50">
+      <Text fontSize="md" textAlign="center" ml="20px" mr="20px" mb="20px">
+        Have a question? Want to share your experience with us? We'd love to
+        hear from you!
+      </Text>
+      <Box
+        w="80%"
+        h="80%"
+        ml="auto"
+        mr="auto"
+        p="40px"
+        bgColor="blackAlpha.50"
+        boxShadow="md"
+        borderRadius="5px 0 0 5px"
+      >
         <form onSubmit={handleSubmit}>
           <FormControl id="name" my="4">
             <FormLabel>Name</FormLabel>
@@ -69,7 +82,6 @@ const ContactUsPage = () => {
               variant="filled"
               bgColor="white"
               required
-              borderRadius="0"
             />
           </FormControl>
 
@@ -81,7 +93,6 @@ const ContactUsPage = () => {
               onChange={(e) => setEmail(e.target.value)}
               variant="filled"
               bgColor="white"
-              borderRadius="0"
               required
             />
           </FormControl>
@@ -95,18 +106,11 @@ const ContactUsPage = () => {
               bgColor="white"
               minH="200px"
               size="lg"
-              borderRadius="0"
               required
             />
           </FormControl>
 
-          <Button
-            colorScheme="cyan"
-            type="submit"
-            w="100%"
-            borderRadius="0"
-            mt="10px"
-          >
+          <Button colorScheme="messenger" type="submit" w="100%" mt="10px">
             Submit
           </Button>
         </form>

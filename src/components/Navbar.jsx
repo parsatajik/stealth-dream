@@ -6,14 +6,12 @@ import {
   Button,
   Image,
   useBreakpointValue,
-  useColorModeValue,
 } from "@chakra-ui/react";
 import { Link, useNavigate } from "react-router-dom";
 
-import LOGO from "../assets/artefice_logo.png";
+import LOGO from "../assets/artefice-logo-v3-transparent.png";
 
 const NavBar = () => {
-  const bg = useColorModeValue("#fafafc", "gray.800");
   const navigate = useNavigate();
 
   const LogoTextSize = useBreakpointValue({
@@ -23,9 +21,9 @@ const NavBar = () => {
 
   return (
     <Box
-      bg={bg}
+      bgColor="blackAlpha.100"
       px={4}
-      boxShadow="sm"
+      boxShadow="md"
       w="100%"
       alignItems="center"
       justifyContent="center"
@@ -33,12 +31,9 @@ const NavBar = () => {
     >
       <Flex h={16} alignItems="center" justifyContent="space-between" w="90%">
         <Box display="flex" alignItems="center" onClick={() => navigate("/")}>
-          <Image w="40px" h="40px" src={LOGO} alt="Artefice Logo" mr="10px" />
+          <Image w="55px" h="55px" src={LOGO} alt="Artefice Logo" mr="10px" />
           <Text fontSize={LogoTextSize} fontWeight={"bold"}>
-            <Box as="span" color="cyan.500" pr="5px">
-              Artefice
-            </Box>
-            | The Maker
+            Artefice
           </Text>
         </Box>
 
