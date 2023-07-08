@@ -25,10 +25,17 @@ import CheckoutForm from "../components/CheckoutForm";
 import Tip from "../components/Tip";
 import TShirtMockup from "../components/TShirtMockUp";
 import Gallery from "../components/Gallery";
+import Slider from "../components/Slider";
 import mixpanel from "mixpanel-browser";
 import { db } from "../firebase";
 import { collection, query, where, getDocs, limit } from "firebase/firestore";
-import { COLORS, SIZES, SURPRISE_ME_PROMPTS, TIPS } from "../constants";
+import {
+  COLORS,
+  SIZES,
+  SURPRISE_ME_PROMPTS,
+  TIPS,
+  CUSTOMER_IMAGES,
+} from "../constants";
 
 const getRandomElement = (arr) => {
   return arr[Math.floor(Math.random() * arr.length)];
@@ -463,6 +470,11 @@ const CreatePage = ({ isAffiliate }) => {
       )}
 
       <Box maxW="80%" mt="40px" w="100%">
+        <Text fontSize="2xl" fontWeight="bold" mb="20px" w="80%">
+          Our Work
+        </Text>
+        <Slider images={CUSTOMER_IMAGES} />
+
         <Text fontSize="2xl" fontWeight="bold" mb="20px" w="80%">
           Recent Creations
         </Text>

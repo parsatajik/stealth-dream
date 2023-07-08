@@ -15,6 +15,19 @@ import T14 from "./assets/tips/A bowl of soup that is also a portal to another d
 import T15 from "./assets/tips/A pencil and watercolor drawing of a bright city in the future with flying cars.png";
 import T16 from "./assets/tips/An oil pastel drawing of an annoyed cat in a spaceship.png";
 
+import P1 from "./assets/customerImages/1.png";
+import P2 from "./assets/customerImages/2.png";
+import P3 from "./assets/customerImages/3.png";
+import P4 from "./assets/customerImages/4.png";
+import P5 from "./assets/customerImages/5.png";
+import P6 from "./assets/customerImages/6.png";
+import P7 from "./assets/customerImages/7.png";
+import P8 from "./assets/customerImages/8.png";
+import P9 from "./assets/customerImages/9.png";
+import P10 from "./assets/customerImages/10.png";
+
+
+
 export const TIPS = [
   {
     imgSrc: T1,
@@ -148,3 +161,18 @@ export const SURPRISE_ME_PROMPTS = [
   "a fortune-telling shiba inu reading your fate in a giant hamburger, digital art",
   "teddy bears shopping for groceries in Japan, ukiyo-e",
 ];
+
+export const CUSTOMER_IMAGES = [
+  P1,
+  P2,
+  P3,
+  P4,
+  P5,
+  P6,
+  P7,
+  P8,
+  P9,
+  P10,
+  P1,
+  P2,
+]
