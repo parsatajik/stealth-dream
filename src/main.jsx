@@ -21,7 +21,7 @@ import "@fontsource/roboto/400.css";
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <ComingSoonPage />,
+    element: <App />,
     errorElement: <ErrorPage />,
     children: [
       { path: "thank-you", element: <ThankYouPage /> },
