@@ -9,6 +9,7 @@ import ErrorPage from "./pages/ErrorPage";
 import CreatePage from "./pages/CreatePage";
 import AboutUsPage from "./pages/AboutUsPage";
 import ContactUsPage from "./pages/ContactPage";
+import ComingSoonPage from "./pages/ComingSoonPage";
 import { loader as createPageLoader } from "./pages/CreatePage";
 
 import "./index.css";
@@ -20,7 +21,7 @@ import "@fontsource/roboto/400.css";
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <App />,
+    element: <ComingSoonPage />,
     errorElement: <ErrorPage />,
     children: [
       { path: "thank-you", element: <ThankYouPage /> },
