@@ -1,6 +1,10 @@
 import Stripe from "stripe";
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
+stripe.applePayDomains.create({
+  domain_name: "www.artefice.ai",
+});
+
 export default async (req, res) => {
   try {
     const paymentIntent = await stripe.paymentIntents.create({
