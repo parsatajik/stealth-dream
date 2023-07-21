@@ -25,7 +25,7 @@
   "rewrites": [
     {
       "source": "/.well-known/apple-developer-merchantid-domain-association",
-      "destination": "/.well-known/apple-developer-merchantid-domain-association"
+      "destination": "/public/.well-known/apple-developer-merchantid-domain-association"
     }
   ]
 }
