@@ -1,8 +1,9 @@
 import React from "react";
 import { Box } from "@chakra-ui/react";
 import Navbar from "./components/Navbar";
-import { Outlet } from "react-router-dom";
 import Footer from "./components/Footer";
+import PromotionBanner from "./components/PromotionBanner";
+import { Outlet, ScrollRestoration } from "react-router-dom";
 
 const App = () => {
   return (
@@ -16,9 +17,13 @@ const App = () => {
       alignItems="center"
       bgColor="#fafafc"
     >
+      <PromotionBanner
+        promotionText={`LIMITED TIME ONLY... 20% OFF STORE WIDE!!!`}
+      />
       <Navbar />
       <Outlet />
       <Footer />
+      <ScrollRestoration />
     </Box>
   );
 };

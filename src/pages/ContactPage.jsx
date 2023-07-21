@@ -8,6 +8,7 @@ import {
   FormLabel,
   Textarea,
   useToast,
+  useBreakpointValue,
 } from "@chakra-ui/react";
 import emailjs from "@emailjs/browser";
 
@@ -16,6 +17,26 @@ const ContactUsPage = () => {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const toast = useToast();
+
+  const headingSize = useBreakpointValue({
+    base: "2xl",
+    md: "4xl",
+  });
+
+  const textSize = useBreakpointValue({
+    base: "sm",
+    md: "md",
+  });
+
+  const formLabelSize = useBreakpointValue({
+    base: "sm",
+    md: "md",
+  });
+
+  const padding = useBreakpointValue({
+    base: "20px",
+    md: "40px",
+  });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -55,10 +76,17 @@ const ContactUsPage = () => {
 
   return (
     <>
-      <Text fontSize="4xl" fontWeight="bold" mb="20px" mt="60px">
-        Contact Us
+      <Text fontSize={headingSize} fontWeight="bold" mb="20px" mt="60px">
+        Drop a line!
       </Text>
-      <Text fontSize="md" textAlign="center" ml="20px" mr="20px" mb="20px">
+      <Text
+        fontSize={textSize}
+        textAlign="center"
+        ml="20px"
+        mr="20px"
+        mb="20px"
+        w="80%"
+      >
         Have a question? Want to share your experience with us? We'd love to
         hear from you!
       </Text>
@@ -67,14 +95,15 @@ const ContactUsPage = () => {
         h="80%"
         ml="auto"
         mr="auto"
-        p="40px"
+        p={padding}
         bgColor="blackAlpha.50"
         boxShadow="md"
         borderRadius="5px 0 0 5px"
+        mb="100px"
       >
         <form onSubmit={handleSubmit}>
           <FormControl id="name" my="4">
-            <FormLabel>Name</FormLabel>
+            <FormLabel fontSize={formLabelSize}>Name</FormLabel>
             <Input
               type="text"
               value={name}
@@ -82,11 +111,12 @@ const ContactUsPage = () => {
               variant="filled"
               bgColor="white"
               required
+              fontSize={textSize}
             />
           </FormControl>
 
           <FormControl id="email" my="4">
-            <FormLabel>Email address</FormLabel>
+            <FormLabel fontSize={formLabelSize}>Email address</FormLabel>
             <Input
               type="email"
               value={email}
@@ -94,11 +124,12 @@ const ContactUsPage = () => {
               variant="filled"
               bgColor="white"
               required
+              fontSize={textSize}
             />
           </FormControl>
 
           <FormControl id="message" my="4">
-            <FormLabel>Message</FormLabel>
+            <FormLabel fontSize={formLabelSize}>Message</FormLabel>
             <Textarea
               value={message}
               onChange={(e) => setMessage(e.target.value)}
@@ -107,10 +138,19 @@ const ContactUsPage = () => {
               minH="200px"
               size="lg"
               required
+              fontSize={textSize}
             />
           </FormControl>
 
-          <Button colorScheme="messenger" type="submit" w="100%" mt="10px">
+          <Button
+            bgColor="blackAlpha.800"
+            color="white"
+            _hover={{ opacity: "0.7", border: "none" }}
+            type="submit"
+            w="100%"
+            mt="10px"
+            fontSize={textSize}
+          >
             Submit
           </Button>
         </form>

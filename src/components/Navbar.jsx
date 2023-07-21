@@ -29,7 +29,7 @@ const NavBar = () => {
       justifyContent="center"
       display="flex"
     >
-      <Flex h={16} alignItems="center" justifyContent="space-between" w="90%">
+      <Flex h={16} alignItems="center" justifyContent="space-between" w="95%">
         <Box display="flex" alignItems="center" onClick={() => navigate("/")}>
           <Image w="55px" h="55px" src={LOGO} alt="Artefice Logo" mr="10px" />
           <Text fontSize={LogoTextSize} fontWeight={"bold"}>

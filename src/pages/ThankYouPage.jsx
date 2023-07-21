@@ -1,8 +1,24 @@
 import React from "react";
-import { Button, Box, Heading, Text, Link, Stack } from "@chakra-ui/react";
-import { FaFacebookF, FaTwitter, FaInstagram, FaTiktok } from "react-icons/fa";
+import {
+  Button,
+  Box,
+  Heading,
+  Text,
+  useBreakpointValue,
+} from "@chakra-ui/react";
+import SocialIcons from "../components/SocialIcons";
 
 const ThankYouPage = () => {
+  const headingSize = useBreakpointValue({
+    base: "2xl",
+    md: "4xl",
+  });
+
+  const textSize = useBreakpointValue({
+    base: "sm",
+    md: "md",
+  });
+
   return (
     <Box
       w="80%"
@@ -13,27 +29,17 @@ const ThankYouPage = () => {
       alignItems="center"
       justifyContent="center"
     >
-      <Heading mb={6} textAlign="center">
+      <Heading fontSize={headingSize} mb={6} textAlign="center">
         Thank you for your purchase!
       </Heading>
-      <Text mb={4} textAlign="center">
+      <Text fontSize={textSize} mb={4} textAlign="center">
         Artefice, The Maker, will send you an email with your order's details.
       </Text>
-      <Button as="a" href="/" colorScheme="blue" mb={4}>
+      <Button as="a" href="/" mb={4} fontSize={textSize}>
         Back to Home
       </Button>
-      <Text mb={2}>Share your experience with us:</Text>
-      <Stack spacing={2} mb={4} direction="row">
-        <Link href="https://www.twitter.com/arteficeai" isExternal>
-          <FaTwitter size="24px" />
-        </Link>
-        <Link href="https://www.instagram.com/arteficeai" isExternal>
-          <FaInstagram size="24px" />
-        </Link>
-        <Link href="https://www.tiktok.com/@arteficeai" isExternal>
-          <FaTiktok size="24px" />
-        </Link>
-      </Stack>
+      <Text fontSize={textSize}>Share your experience with us.</Text>
+      <SocialIcons />
     </Box>
   );
 };

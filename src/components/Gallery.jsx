@@ -9,7 +9,12 @@ const Gallery = ({ images, setDreamInput, handleDesignCreation }) => {
   });
 
   return (
-    <Box display="grid" gridGap="2" gridTemplateColumns={gridTemplateColumns}>
+    <Box
+      display="grid"
+      gridGap="2"
+      gridTemplateColumns={gridTemplateColumns}
+      mb="100px"
+    >
       {images?.map((image, index) => (
         <GalleryItem
           key={index}

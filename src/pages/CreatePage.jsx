@@ -17,6 +17,7 @@ import {
   Textarea,
   Select,
   useBreakpointValue,
+  useToast,
 } from "@chakra-ui/react";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
@@ -35,6 +36,7 @@ import {
   SURPRISE_ME_PROMPTS,
   TIPS,
   CUSTOMER_IMAGES,
+  TSHIRT_COST,
 } from "../constants";
 
 const getRandomElement = (arr) => {
@@ -78,8 +80,10 @@ const CreatePage = ({ isAffiliate }) => {
   const [stripeClientSecret, setStripeClientSecret] = useState("");
   const [stripePaymentIntentId, setStripePaymentIntentId] = useState("");
   const [shareCreation, setShareCreation] = useState(true);
+  const [totalOrderCost, setTotalOrderCost] = useState(0);
 
   const loaderData = useLoaderData();
+  const toast = useToast();
   const affiliate = isAffiliate ? loaderData?.affiliate : null;
   const images = loaderData?.images;
 
@@ -123,6 +127,38 @@ const CreatePage = ({ isAffiliate }) => {
     md: false,
   });
 
+  const isSearchAllowed = () => {
+    const today = new Date().toDateString();
+    const searchHistory = JSON.parse(
+      localStorage.getItem("searchHistory") || "{}"
+    );
+
+    if (searchHistory.date !== today) {
+      localStorage.setItem(
+        "searchHistory",
+        JSON.stringify({ date: today, count: 1 })
+      );
+      return true;
+    } else if (searchHistory.count < 20) {
+      localStorage.setItem(
+        "searchHistory",
+        JSON.stringify({ ...searchHistory, count: searchHistory.count + 1 })
+      );
+      return true;
+    }
+
+    toast({
+      title: "Search limit reached",
+      description:
+        "You have reached your search limit for today. Please try again tomorrow.",
+      status: "error",
+      duration: 5000,
+      isClosable: true,
+      position: "top",
+    });
+    return false;
+  };
+
   const fetchImage = async (dream) => {
     try {
       const response = await axios.post(
@@ -144,12 +180,22 @@ const CreatePage = ({ isAffiliate }) => {
       return response.data.data;
     } catch (e) {
       console.error(e);
+      toast({
+        title: "Error",
+        description:
+          "An error occurred while generating your images. Make sure that your prompt adheres to our guidelines.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+        position: "top",
+      });
+      setRequestActive(false);
     }
   };
 
   const handleDesignCreation = async () => {
     try {
-      if (!requestActive) {
+      if (!requestActive && isSearchAllowed()) {
         setDreamImgs([]);
         setRequestActive(true);
         setTip(getRandomElement(TIPS));
@@ -161,6 +207,10 @@ const CreatePage = ({ isAffiliate }) => {
 
   const handleSurpriseMe = () => {
     setDreamInput(getRandomElement(SURPRISE_ME_PROMPTS));
+  };
+
+  const handleRightClick = (e) => {
+    e.preventDefault();
   };
 
   useEffect(() => {
@@ -189,6 +239,10 @@ const CreatePage = ({ isAffiliate }) => {
     if (stripeClientSecret.length === 0) fetchStripeClientSecret();
   }, []);
 
+  useEffect(() => {
+    setTotalOrderCost(selectedQuantity * TSHIRT_COST);
+  }, [selectedQuantity]);
+
   return (
     <>
       <Text fontSize="2xl" fontWeight="bold" mt="20px" w="80%">
@@ -210,14 +264,20 @@ const CreatePage = ({ isAffiliate }) => {
         <Box mt="20px" w="80%" boxShadow="md" borderRadius="5px">
           <Textarea
             size="lg"
-            minH="110px"
+            minH="130px"
+            fontSize="sm"
             borderBottomRadius="0"
+            placeholder="Describe your dream... It could be anything from a person to a place to a feeling to a concept. The more detail the better!"
+            onKeyDown={async (e) => {
+              if (e.key === "Enter" && dreamInput.length) {
+                handleDesignCreation();
+              }
+            }}
             value={dreamInput}
             onChange={(e) => setDreamInput(e.target.value)}
             w="100%"
             resize="none"
             m="0"
-            fontSize="md"
           />
           <Button
             w="100%"
@@ -226,9 +286,11 @@ const CreatePage = ({ isAffiliate }) => {
             color="black"
             borderTopRadius="0"
             fontSize="md"
-            onClick={handleSurpriseMe}
+            onClick={
+              dreamInput.length ? handleDesignCreation : handleSurpriseMe
+            }
           >
-            Surprise Me
+            {dreamInput.length ? "Make My Shirt!" : "Surprise Me!"}
           </Button>
 
           {/* <Button
@@ -269,7 +331,7 @@ const CreatePage = ({ isAffiliate }) => {
               fontSize={inputFontSize}
               size={makeMyShirtButtonSize}
             >
-              {dreamImgs.length ? "Try again!" : makeMyShirtButtonText}
+              {dreamImgs?.length ? "Try again!" : makeMyShirtButtonText}
             </Button>
           </InputRightElement>
         </InputGroup>
@@ -312,6 +374,8 @@ const CreatePage = ({ isAffiliate }) => {
               opacity={!selectedImg || selectedImg !== img?.url ? "1" : "0.7"}
               _hover={{ opacity: "0.7", border: "2px solid cyan" }}
               onClick={() => setSelectedImg(img.url)}
+              onContextMenu={handleRightClick}
+              alt={`AI Dream Image ${i}`}
             />
           ))}
         </Box>
@@ -364,7 +428,7 @@ const CreatePage = ({ isAffiliate }) => {
                   />
                 ))}
               </ButtonGroup>
-              <Text fontSize="m" fontWeight="bold" mb="15px">
+              <Text fontSize="m" fontWeight="bold">
                 Size
               </Text>
               <Box
@@ -413,6 +477,19 @@ const CreatePage = ({ isAffiliate }) => {
               </Select>
             </Box>
           </Box>
+          <Box
+            bgColor="blackAlpha.800"
+            color="white"
+            mt="25px"
+            p="20px"
+            w="80%"
+          >
+            <Text fontSize={inputFontSize} textAlign="center" fontWeight="bold">
+              Our clothes are made to represent you. You are elegant. You are
+              creative. You deserve the best quality. Remember, Artefice is You.
+              We are The Makers.
+            </Text>
+          </Box>
         </>
       )}
 
@@ -436,12 +513,13 @@ const CreatePage = ({ isAffiliate }) => {
               as="i"
               color="blackAlpha.800"
             >
-              Would like to share your creation with the world?
+              Would you like to share your creation with the world?
             </Text>
             <Switch
               size="md"
               onChange={() => setShareCreation(!shareCreation)}
               isChecked={shareCreation}
+              colorScheme="cyan"
             />
           </Stack>
           <Elements
@@ -464,6 +542,8 @@ const CreatePage = ({ isAffiliate }) => {
               isShareable={shareCreation}
               affiliate={affiliate}
               paymentIntentId={stripePaymentIntentId}
+              totalOrderCost={totalOrderCost}
+              setTotalOrderCost={setTotalOrderCost}
             />
           </Elements>
         </>

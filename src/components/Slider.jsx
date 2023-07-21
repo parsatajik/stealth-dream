@@ -36,10 +36,9 @@ const Slider = ({ images }) => {
     }, 1000);
   };
 
-  // Automatically go to the next slide every 4 seconds
   useEffect(() => {
     resetTimeout();
-    timeoutRef.current = setTimeout(nextSlide, 4000);
+    timeoutRef.current = setTimeout(nextSlide, 6000);
 
     return () => {
       resetTimeout();
@@ -62,6 +61,7 @@ const Slider = ({ images }) => {
             <chakra.div
               width="100%"
               height="100%"
+              minH="400px"
               transition="opacity 1s"
               opacity={fade ? 0 : 1}
             >

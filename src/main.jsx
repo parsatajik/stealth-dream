@@ -9,6 +9,7 @@ import ErrorPage from "./pages/ErrorPage";
 import CreatePage from "./pages/CreatePage";
 import AboutUsPage from "./pages/AboutUsPage";
 import ContactUsPage from "./pages/ContactPage";
+import PrivacyPolicyPage from "./pages/PolicyPages/PrivacyPolicyPage";
 import ComingSoonPage from "./pages/ComingSoonPage";
 import { loader as createPageLoader } from "./pages/CreatePage";
 
@@ -17,6 +18,9 @@ import "./index.css";
 import theme from "./theme";
 
 import "@fontsource/roboto/400.css";
+import TermsOfServicePage from "./pages/PolicyPages/TermsOfServicePage";
+import ShippingPolicyPage from "./pages/PolicyPages/ShippingPolicyPage";
+import RefundPolicyPage from "./pages/PolicyPages/RefundPolicyPage";
 
 const router = createBrowserRouter([
   {
@@ -31,6 +35,26 @@ const router = createBrowserRouter([
         path: "affiliate/:username",
         element: <CreatePage isAffiliate={true} />,
         loader: createPageLoader,
+      },
+      {
+        path: "policies/privacy-policy",
+        element: <PrivacyPolicyPage />,
+      },
+      {
+        path: "become-an-affiliate",
+        element: <ComingSoonPage />,
+      },
+      {
+        path: "policies/terms-of-service",
+        element: <TermsOfServicePage />,
+      },
+      {
+        path: "policies/shipping-policy",
+        element: <ShippingPolicyPage />,
+      },
+      {
+        path: "policies/refund-policy",
+        element: <RefundPolicyPage />,
       },
       { index: true, element: <CreatePage />, loader: createPageLoader },
     ],
