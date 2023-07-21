@@ -6,7 +6,7 @@ export default async (req, res) => {
     const paymentIntent = await stripe.paymentIntents.create({
       amount: 40 * 100,
       currency: "cad",
-      payment_method_types: ["card", "link"],
+      payment_method_types: ["card", "link", "apple_pay", "google_pay"],
     });
 
     res.status(200).send({
