@@ -21,5 +21,11 @@
       "path": "/api/dailyPurchaseReport",
       "schedule": "59 23 * * *"
     }
+  ],
+  "rewrites": [
+    {
+      "source": "/.well-known/apple-developer-merchantid-domain-association",
+      "destination": "/.well-known/apple-developer-merchantid-domain-association"
+    }
   ]
 }
