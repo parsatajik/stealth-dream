@@ -25,8 +25,9 @@ import P7 from "./assets/customerImages/7.png";
 import P8 from "./assets/customerImages/8.png";
 import P9 from "./assets/customerImages/9.png";
 import P10 from "./assets/customerImages/10.png";
-
-
+import P11 from "./assets/customerImages/11.png";
+import P12 from "./assets/customerImages/12.png";
+import P13 from "./assets/customerImages/13.png";
 
 export const TIPS = [
   {
@@ -164,7 +165,7 @@ export const SURPRISE_ME_PROMPTS = [
 
 export const CUSTOMER_IMAGES = [
   P1,
-  P2,
+  P13,
   P3,
   P4,
   P5,
@@ -173,6 +174,8 @@ export const CUSTOMER_IMAGES = [
   P8,
   P9,
   P10,
-  P1,
-  P2,
-]
+  P11,
+  P12,
+];
+
+export const TSHIRT_COST = 40;

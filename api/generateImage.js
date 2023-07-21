@@ -21,6 +21,6 @@ export default async function generateImage(req, res) {
     res.status(200).send(imgRes.data);
   } catch (err) {
     console.log(err);
-    res.status(500).send({ error: err });
+    res.status(500).send([]);
   }
 }

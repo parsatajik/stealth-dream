@@ -2,7 +2,7 @@ import { Box, Image, Text, useBreakpointValue } from "@chakra-ui/react";
 
 const Tip = ({ imgSrc, tipText, tipPrompt }) => {
   const tipContainerDirection = useBreakpointValue({
-    base: "column",
+    base: "column-reverse",
     md: "row",
   });
 
@@ -32,7 +32,12 @@ const Tip = ({ imgSrc, tipText, tipPrompt }) => {
   });
 
   return (
-    <Box display="flex" mt="20px" flexDirection={tipContainerDirection}>
+    <Box
+      display="flex"
+      mt="20px"
+      flexDirection={tipContainerDirection}
+      mb="10px"
+    >
       <Image src={imgSrc} w={imgW} h="auto" />
       <Box
         display="flex"

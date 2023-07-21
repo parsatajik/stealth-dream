@@ -7,6 +7,8 @@ import {
   Divider,
   Spinner,
   useBreakpointValue,
+  Input,
+  useToast,
 } from "@chakra-ui/react";
 import {
   useStripe,
@@ -29,6 +31,7 @@ import {
 } from "@firebase/firestore";
 import mixpanel from "mixpanel-browser";
 import { db } from "../firebase";
+import { TSHIRT_COST } from "../constants";
 
 const CheckoutForm = ({
   selectedImage,
@@ -39,20 +42,103 @@ const CheckoutForm = ({
   isShareable,
   affiliate,
   paymentIntentId,
+  totalOrderCost,
+  setTotalOrderCost,
 }) => {
   const [email, setEmail] = useState("");
   const [customerInfo, setCustomerInfo] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+  const [coupon, setCoupon] = useState("");
+  const [couponWasUsed, setCouponWasUsed] = useState(false);
 
   const stripe = useStripe();
   const elements = useElements();
   const navigate = useNavigate();
+  const toast = useToast();
+
+  const inputFontSize = useBreakpointValue({
+    base: "sm",
+    md: "md",
+  });
+
+  const checkCoupon = async () => {
+    try {
+      if (couponWasUsed) {
+        toast({
+          title: "Error",
+          description: "You have already used a coupon!",
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+          position: "top",
+        });
+
+        return;
+      }
+
+      const response = await axios.post(
+        "/api/checkCoupon",
+        { code: coupon },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      const { success, percentage, message } = response.data;
+
+      if (success) {
+        setTotalOrderCost((state) => state * (1 - percentage / 100));
+        toast({
+          title: "Success",
+          description: message,
+          status: "success",
+          duration: 5000,
+          isClosable: true,
+          position: "top",
+        });
+        setCouponWasUsed(true);
+      } else {
+        toast({
+          title: "Error",
+          description: message,
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+          position: "top",
+        });
+      }
+    } catch (err) {
+      console.error(err);
+      toast({
+        title: "Error",
+        description: "An error occurred while checking the coupon code.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+        position: "top",
+      });
+    }
+  };
 
   const sendPaymentReceipt = async () => {
     try {
       await axios.post(`/api/updatePaymentIntent`, {
-        email,
         paymentIntentId,
+        params: { receipt_email: email },
+      });
+    } catch (err) {
+      console.error("An error occurred while sending the payment receipt.");
+      console.error(err);
+    }
+  };
+
+  const updatePaymentIntentAmount = async () => {
+    try {
+      await axios.post(`/api/updatePaymentIntent`, {
+        paymentIntentId,
+        params: { amount: totalOrderCost * 100 },
       });
     } catch (err) {
       console.error("An error occurred while sending the payment receipt.");
@@ -65,21 +151,31 @@ const CheckoutForm = ({
 
     setIsLoading((state) => !state);
 
-    const { error } = await stripe.confirmPayment({
-      elements,
-      confirmParams: {
-        // return_url: "https://example.com/order/123/complete",
-      },
-      redirect: "if_required",
-    });
+    if (totalOrderCost !== TSHIRT_COST * 100 && totalOrderCost > 0) {
+      await updatePaymentIntentAmount();
+    }
 
-    if (error) {
+    let stripeError;
+
+    if (totalOrderCost > 0) {
+      const res = await stripe.confirmPayment({
+        elements,
+        confirmParams: {
+          // return_url: "https://example.com/order/123/complete",
+        },
+        redirect: "if_required",
+      });
+
+      stripeError = res.error;
+    }
+
+    if (totalOrderCost > 0 && stripeError) {
       console.error(error);
       setIsLoading(false);
       alert("There was an error with processing your payment.");
     } else {
       try {
-        await sendPaymentReceipt();
+        if (totalOrderCost > 0) await sendPaymentReceipt();
 
         const response = await axios.post(
           "/api/storeImage",
@@ -200,16 +296,47 @@ const CheckoutForm = ({
           justifyContent="space-between"
           mb="10px"
         >
-          <Text size="md">{"Subtotal (1 item)"}</Text>
-          <Text size="md">{"$27.00"}</Text>
+          <Text fontSize={inputFontSize}>{`Subtotal (${selectedQuantity} ${
+            selectedQuantity === 1 ? "item" : "items"
+          })`}</Text>
+          <Text fontSize={inputFontSize}>{`$${totalOrderCost}`}</Text>
+        </Stack>
+        <Stack
+          direction="row"
+          alignItems="center"
+          justifyContent="space-between"
+          mb="15px"
+        >
+          <Text fontSize={inputFontSize}>{"Shipping"}</Text>
+          <Text fontSize={inputFontSize}>{"FREE"}</Text>
         </Stack>
         <Stack
           direction="row"
           alignItems="center"
           justifyContent="space-between"
         >
-          <Text size="md">{"Shipping"}</Text>
-          <Text size="md">{"FREE"}</Text>
+          <Input
+            placeholder="Gift or discount code"
+            w="85%"
+            fontSize={inputFontSize}
+            p="8px"
+            onChange={(event) => setCoupon(event.target.value)}
+            onKeyDown={async (e) => {
+              if (e.key === "Enter" && coupon.length) {
+                checkCoupon();
+              }
+            }}
+            disabled={couponWasUsed}
+          />
+          <Button
+            bgColor="blackAlpha.800"
+            color="white"
+            fontSize={inputFontSize}
+            _hover={{ opacity: "0.7", border: "none" }}
+            onClick={checkCoupon}
+          >
+            Apply
+          </Button>
         </Stack>
         <Divider
           orientation="horizontal"
@@ -223,19 +350,21 @@ const CheckoutForm = ({
           alignItems="center"
           justifyContent="space-between"
         >
-          <Text size="md" fontWeight="bold">
+          <Text fontSize={inputFontSize} fontWeight="bold">
             {"Total"}
           </Text>
-          <Text size="md" fontWeight="bold">
-            {"$27.00"}
+          <Text fontSize={inputFontSize} fontWeight="bold">
+            {`$${totalOrderCost}`}
           </Text>
         </Stack>
         <Button
           w="100%"
           mt="20px"
           size="lg"
-          colorScheme="messenger"
           type="submit"
+          bgColor="blackAlpha.800"
+          color="white"
+          _hover={{ opacity: "0.7", border: "none" }}
         >
           Place Order
         </Button>

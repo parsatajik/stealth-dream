@@ -1,0 +1,1 @@
+export const TSHIRT_COST = 40;

@@ -5,7 +5,7 @@ export default async (req, res) => {
   try {
     const paymentIntent = await stripe.paymentIntents.update(
       req.body.paymentIntentId,
-      { receipt_email: req.body.email }
+      req.body.params
     );
 
     res.status(200).send("Payment intent updated.");
