@@ -146,15 +146,26 @@ const CheckoutForm = ({
     }
   };
 
+  const checkPaymentAmount = async () => {
+    try {
+      if (totalOrderCost !== TSHIRT_COST && totalOrderCost > 0) {
+        console.log("updating payment intent amount");
+        await updatePaymentIntentAmount();
+      }
+    } catch (err) {
+      console.error("An error occurred while updating the payment intent.");
+      console.error(err);
+    }
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    setIsLoading((state) => !state);
+    setIsLoading(true);
 
-    if (totalOrderCost !== TSHIRT_COST && totalOrderCost > 0) {
-      console.log("updating payment intent amount");
-      await updatePaymentIntentAmount();
-    }
+    await checkPaymentAmount();
+
+    let timeoutId;
 
     let stripeError;
 
@@ -225,8 +236,21 @@ const CheckoutForm = ({
         console.error(err);
       } finally {
         setIsLoading(false);
+        clearTimeout(timeoutId);
       }
     }
+
+    timeoutId = setTimeout(() => {
+      setIsLoading(false);
+      toast({
+        title: "Error",
+        description: "An error occurred while processing your payment.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+        position: "top",
+      });
+    }, 6000);
   };
 
   const gridTemplateColumns = useBreakpointValue({
