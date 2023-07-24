@@ -221,6 +221,18 @@ const CreatePage = ({ isAffiliate }) => {
     e.preventDefault();
   };
 
+  const updatePaymentIntentAmount = async () => {
+    try {
+      const res = await axios.post(`/api/updatePaymentIntent`, {
+        paymentIntentId: stripePaymentIntentId,
+        params: { amount: totalOrderCost * 100 },
+      });
+    } catch (err) {
+      console.error("An error occurred while sending the payment receipt.");
+      console.error(err);
+    }
+  };
+
   useEffect(() => {
     async function fetchDreamImgs() {
       if (requestActive) {
@@ -250,6 +262,12 @@ const CreatePage = ({ isAffiliate }) => {
   useEffect(() => {
     setTotalOrderCost(selectedQuantity * TSHIRT_COST);
   }, [selectedQuantity]);
+
+  useEffect(() => {
+    if (totalOrderCost > 0 && stripePaymentIntentId.length > 0) {
+      updatePaymentIntentAmount();
+    }
+  }, [totalOrderCost]);
 
   return (
     <>

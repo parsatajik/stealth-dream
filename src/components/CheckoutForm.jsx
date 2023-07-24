@@ -134,38 +134,22 @@ const CheckoutForm = ({
     }
   };
 
-  const updatePaymentIntentAmount = async () => {
-    try {
-      await axios.post(`/api/updatePaymentIntent`, {
-        paymentIntentId,
-        params: { amount: totalOrderCost * 100 },
-      });
-    } catch (err) {
-      console.error("An error occurred while sending the payment receipt.");
-      console.error(err);
-    }
-  };
-
-  const checkPaymentAmount = async () => {
-    try {
-      if (totalOrderCost !== TSHIRT_COST && totalOrderCost > 0) {
-        console.log("updating payment intent amount");
-        await updatePaymentIntentAmount();
-      }
-    } catch (err) {
-      console.error("An error occurred while updating the payment intent.");
-      console.error(err);
-    }
-  };
-
   const handleSubmit = async (event) => {
     event.preventDefault();
 
     setIsLoading(true);
 
-    await checkPaymentAmount();
-
-    let timeoutId;
+    let timeoutId = setTimeout(() => {
+      setIsLoading(false);
+      toast({
+        title: "Error",
+        description: "An error occurred while processing your payment.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+        position: "top",
+      });
+    }, 10000);
 
     let stripeError;
 
@@ -230,27 +214,14 @@ const CheckoutForm = ({
             );
           });
         }
-
-        navigate("/thank-you");
       } catch (err) {
         console.error(err);
       } finally {
         setIsLoading(false);
         clearTimeout(timeoutId);
+        navigate("/thank-you");
       }
     }
-
-    timeoutId = setTimeout(() => {
-      setIsLoading(false);
-      toast({
-        title: "Error",
-        description: "An error occurred while processing your payment.",
-        status: "error",
-        duration: 5000,
-        isClosable: true,
-        position: "top",
-      });
-    }, 6000);
   };
 
   const gridTemplateColumns = useBreakpointValue({

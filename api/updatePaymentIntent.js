@@ -8,7 +8,7 @@ export default async (req, res) => {
       req.body.params
     );
 
-    res.status(200).send("Payment intent updated.");
+    res.status(200).send(paymentIntent);
   } catch (err) {
     console.log(err);
     res.status(500).send("An error occurred when updating the payment intent.");
