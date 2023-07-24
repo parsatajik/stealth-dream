@@ -179,4 +179,4 @@ export const CUSTOMER_IMAGES = [
   P2,
 ];
 
-export const TSHIRT_COST = 40;
+export const TSHIRT_COST = 32;

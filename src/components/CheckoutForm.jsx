@@ -300,7 +300,7 @@ const CheckoutForm = ({
           <Text fontSize={inputFontSize}>{`Subtotal (${selectedQuantity} ${
             selectedQuantity === 1 ? "item" : "items"
           })`}</Text>
-          <Text fontSize={inputFontSize}>{`$${totalOrderCost}`}</Text>
+          <Text fontSize={inputFontSize}>{`$${totalOrderCost * 1.25}`}</Text>
         </Stack>
         <Stack
           direction="row"
@@ -355,6 +355,14 @@ const CheckoutForm = ({
             {"Total"}
           </Text>
           <Text fontSize={inputFontSize} fontWeight="bold">
+            <Text
+              as="span"
+              textDecoration="line-through"
+              color="cyan.500"
+              mr="10px"
+            >
+              {`$${totalOrderCost * 1.25} (20% OFF)`}{" "}
+            </Text>{" "}
             {`$${totalOrderCost}`}
           </Text>
         </Stack>
