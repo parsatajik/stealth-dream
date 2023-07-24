@@ -151,7 +151,8 @@ const CheckoutForm = ({
 
     setIsLoading((state) => !state);
 
-    if (totalOrderCost !== TSHIRT_COST * 100 && totalOrderCost > 0) {
+    if (totalOrderCost !== TSHIRT_COST && totalOrderCost > 0) {
+      console.log("updating payment intent amount");
       await updatePaymentIntentAmount();
     }
 

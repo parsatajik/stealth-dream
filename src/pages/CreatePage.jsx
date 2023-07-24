@@ -29,7 +29,14 @@ import Gallery from "../components/Gallery";
 import Slider from "../components/Slider";
 import mixpanel from "mixpanel-browser";
 import { db } from "../firebase";
-import { collection, query, where, getDocs, limit } from "firebase/firestore";
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  limit,
+  orderBy,
+} from "firebase/firestore";
 import {
   COLORS,
   SIZES,
@@ -55,6 +62,7 @@ export const loader = async ({ params }) => {
   const purchasesQuery = query(
     collection(db, "purchases"),
     where("isShareable", "==", true),
+    orderBy("date", "desc"),
     limit(100)
   );
 
