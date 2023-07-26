@@ -89,7 +89,7 @@ const CheckoutForm = ({
       const { success, percentage, message } = response.data;
 
       if (success) {
-        setTotalOrderCost((state) => state * (1 - percentage / 100));
+        setTotalOrderCost((state) => Math.ceil(state * (1 - percentage / 100)));
         toast({
           title: "Success",
           description: message,

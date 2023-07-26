@@ -223,12 +223,14 @@ const CreatePage = ({ isAffiliate }) => {
 
   const updatePaymentIntentAmount = async () => {
     try {
-      const res = await axios.post(`/api/createPaymentIntent`, {
-        totalOrderCost,
+      const res = await axios.post(`/api/updatePaymentIntent`, {
+        paymentIntentId: stripePaymentIntentId,
+        params: {
+          amount: totalOrderCost * 100,
+        },
       });
 
-      setStripeClientSecret(res.data.clientSecret);
-      setStripePaymentIntentId(res.data.id);
+      console.log(res.data);
     } catch (err) {
       console.error("An error occurred while sending the payment receipt.");
       console.error(err);
@@ -268,7 +270,7 @@ const CreatePage = ({ isAffiliate }) => {
   }, [selectedQuantity]);
 
   useEffect(() => {
-    if (totalOrderCost > 0) {
+    if (totalOrderCost > 0 && stripeClientSecret.length > 0) {
       updatePaymentIntentAmount();
     }
   }, [totalOrderCost]);
