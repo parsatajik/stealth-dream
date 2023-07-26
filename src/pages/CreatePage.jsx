@@ -63,7 +63,7 @@ export const loader = async ({ params }) => {
     collection(db, "purchases"),
     where("isShareable", "==", true),
     orderBy("date", "desc"),
-    limit(100)
+    limit(50)
   );
 
   const purchasesSnapshot = await getDocs(purchasesQuery);
