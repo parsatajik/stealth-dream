@@ -88,7 +88,7 @@ const CreatePage = ({ isAffiliate }) => {
   const [stripeClientSecret, setStripeClientSecret] = useState("");
   const [stripePaymentIntentId, setStripePaymentIntentId] = useState("");
   const [shareCreation, setShareCreation] = useState(true);
-  const [totalOrderCost, setTotalOrderCost] = useState(0);
+  const [totalOrderCost, setTotalOrderCost] = useState(TSHIRT_COST);
 
   const loaderData = useLoaderData();
   const toast = useToast();
@@ -223,10 +223,12 @@ const CreatePage = ({ isAffiliate }) => {
 
   const updatePaymentIntentAmount = async () => {
     try {
-      const res = await axios.post(`/api/updatePaymentIntent`, {
-        paymentIntentId: stripePaymentIntentId,
-        params: { amount: totalOrderCost * 100 },
+      const res = await axios.post(`/api/createPaymentIntent`, {
+        totalOrderCost,
       });
+
+      setStripeClientSecret(res.data.clientSecret);
+      setStripePaymentIntentId(res.data.id);
     } catch (err) {
       console.error("An error occurred while sending the payment receipt.");
       console.error(err);
@@ -251,7 +253,9 @@ const CreatePage = ({ isAffiliate }) => {
 
   useEffect(() => {
     const fetchStripeClientSecret = async () => {
-      const { data } = await axios.post("/api/createPaymentIntent");
+      const { data } = await axios.post("/api/createPaymentIntent", {
+        totalOrderCost,
+      });
       setStripeClientSecret(data.clientSecret);
       setStripePaymentIntentId(data.id);
     };
@@ -264,7 +268,7 @@ const CreatePage = ({ isAffiliate }) => {
   }, [selectedQuantity]);
 
   useEffect(() => {
-    if (totalOrderCost > 0 && stripePaymentIntentId.length > 0) {
+    if (totalOrderCost > 0) {
       updatePaymentIntentAmount();
     }
   }, [totalOrderCost]);
