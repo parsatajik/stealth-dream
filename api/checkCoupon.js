@@ -1,6 +1,5 @@
 import admin from "firebase-admin";
 
-// Make sure to initialize the Firebase admin SDK only once
 if (!admin.apps.length) {
   const projectId = process.env.FIREBASE_PROJECT_ID;
   const clientEmail = process.env.FIREBASE_CLIENT_EMAIL;

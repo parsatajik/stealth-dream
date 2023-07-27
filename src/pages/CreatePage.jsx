@@ -46,6 +46,8 @@ import {
   TSHIRT_COST,
 } from "../constants";
 
+import { useQueryClient } from "@tanstack/react-query";
+
 const getRandomElement = (arr) => {
   return arr[Math.floor(Math.random() * arr.length)];
 };
@@ -56,27 +58,37 @@ const stripeAppearance = {
   theme: "stripe",
 };
 
-export const loader = async ({ params }) => {
-  const username = params.username;
+const purchasesQuery = query(
+  collection(db, "purchases"),
+  where("isShareable", "==", true),
+  orderBy("date", "desc"),
+  limit(50)
+);
 
-  const purchasesQuery = query(
-    collection(db, "purchases"),
-    where("isShareable", "==", true),
-    orderBy("date", "desc"),
-    limit(50)
-  );
-
-  const purchasesSnapshot = await getDocs(purchasesQuery);
-
-  const purchasesImages = purchasesSnapshot.docs.map((doc) => ({
-    url: doc.data().selectedImage,
-    alt: doc.data().prompt,
-  }));
-
-  return { affiliate: username, images: purchasesImages };
+const purchaseListQuery = {
+  queryKey: ["purchases"],
+  queryFn: () => getDocs(purchasesQuery),
+  staleTime: 1000 * 60 * 5, // 5 minutes
+  cacheTime: 1000 * 60 * 60 * 24, // 24 hours
 };
 
-const CreatePage = ({ isAffiliate }) => {
+export const loader =
+  (queryClient) =>
+  async ({ request }) => {
+    let data = queryClient.getQueryData(purchaseListQuery.queryKey);
+    if (!data) {
+      data = await queryClient.fetchQuery(purchaseListQuery);
+    }
+
+    const purchasesImages = data.docs.map((doc) => ({
+      url: doc.data().selectedImage,
+      alt: doc.data().prompt,
+    }));
+
+    return { images: purchasesImages };
+  };
+
+const CreatePage = () => {
   const [dreamInput, setDreamInput] = useState("");
   const [requestActive, setRequestActive] = useState(false);
   const [dreamImgs, setDreamImgs] = useState([]);
@@ -92,7 +104,6 @@ const CreatePage = ({ isAffiliate }) => {
 
   const loaderData = useLoaderData();
   const toast = useToast();
-  const affiliate = isAffiliate ? loaderData?.affiliate : null;
   const images = loaderData?.images;
 
   const dreamImagesGridTemplateColumns = useBreakpointValue({
@@ -572,7 +583,6 @@ const CreatePage = ({ isAffiliate }) => {
               selectedQuantity={selectedQuantity}
               dreamInput={dreamInput}
               isShareable={shareCreation}
-              affiliate={affiliate}
               paymentIntentId={stripePaymentIntentId}
               totalOrderCost={totalOrderCost}
               setTotalOrderCost={setTotalOrderCost}

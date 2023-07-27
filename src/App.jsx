@@ -4,6 +4,7 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import PromotionBanner from "./components/PromotionBanner";
 import { Outlet, ScrollRestoration } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const App = () => {
   return (

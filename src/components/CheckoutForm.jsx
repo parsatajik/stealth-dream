@@ -40,7 +40,6 @@ const CheckoutForm = ({
   selectedQuantity,
   dreamInput,
   isShareable,
-  affiliate,
   paymentIntentId,
   totalOrderCost,
   setTotalOrderCost,
@@ -50,6 +49,8 @@ const CheckoutForm = ({
   const [isLoading, setIsLoading] = useState(false);
   const [coupon, setCoupon] = useState("");
   const [couponWasUsed, setCouponWasUsed] = useState(false);
+  const [affiliate, setAffiliate] = useState("");
+  const [affiliateWasUsed, setAffiliateWasUsed] = useState(false);
 
   const stripe = useStripe();
   const elements = useElements();
@@ -60,6 +61,66 @@ const CheckoutForm = ({
     base: "sm",
     md: "md",
   });
+
+  const checkAffiliate = async () => {
+    try {
+      if (affiliateWasUsed) {
+        toast({
+          title: "Error",
+          description: "You have already used an affiliate code!",
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+          position: "top",
+        });
+
+        return;
+      }
+
+      const response = await axios.post(
+        "/api/checkAffiliate",
+        { code: affiliate },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      const { success, message } = response.data;
+
+      if (success) {
+        toast({
+          title: "Success",
+          description: message,
+          status: "success",
+          duration: 5000,
+          isClosable: true,
+          position: "top",
+        });
+        setAffiliateWasUsed(true);
+      } else {
+        toast({
+          title: "Error",
+          description: message,
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+          position: "top",
+        });
+      }
+    } catch (err) {
+      console.error(err);
+      toast({
+        title: "Error",
+        description: "An error occurred while checking the affiliate code.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+        position: "top",
+      });
+    }
+  };
 
   const checkCoupon = async () => {
     try {
@@ -199,7 +260,7 @@ const CheckoutForm = ({
 
         const docRef = await addDoc(collection(db, "purchases"), purchase);
 
-        if (affiliate) {
+        if (affiliate.length > 0) {
           const q = query(
             collection(db, "affiliates"),
             where("username", "==", affiliate)
@@ -316,6 +377,7 @@ const CheckoutForm = ({
             w="85%"
             fontSize={inputFontSize}
             p="8px"
+            value={coupon}
             onChange={(event) => setCoupon(event.target.value)}
             onKeyDown={async (e) => {
               if (e.key === "Enter" && coupon.length) {
@@ -328,12 +390,46 @@ const CheckoutForm = ({
             bgColor="blackAlpha.800"
             color="white"
             fontSize={inputFontSize}
+            w="25%"
             _hover={{ opacity: "0.7", border: "none" }}
             onClick={checkCoupon}
           >
             Apply
           </Button>
         </Stack>
+
+        <Stack
+          direction="row"
+          alignItems="center"
+          justifyContent="space-between"
+          mt="15px"
+        >
+          <Input
+            placeholder="Affiliate code (optional)"
+            w="85%"
+            fontSize={inputFontSize}
+            p="8px"
+            value={affiliate}
+            onChange={(event) => setAffiliate(event.target.value)}
+            onKeyDown={async (e) => {
+              if (e.key === "Enter" && coupon.length) {
+                checkAffiliate();
+              }
+            }}
+            disabled={affiliateWasUsed}
+          />
+          <Button
+            bgColor="blackAlpha.800"
+            color="white"
+            w="25%"
+            fontSize={inputFontSize}
+            _hover={{ opacity: "0.7", border: "none" }}
+            onClick={checkAffiliate}
+          >
+            Apply
+          </Button>
+        </Stack>
+
         <Divider
           orientation="horizontal"
           size="100px"

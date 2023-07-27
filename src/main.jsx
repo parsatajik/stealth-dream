@@ -12,6 +12,8 @@ import ContactUsPage from "./pages/ContactPage";
 import PrivacyPolicyPage from "./pages/PolicyPages/PrivacyPolicyPage";
 import ComingSoonPage from "./pages/ComingSoonPage";
 import { loader as createPageLoader } from "./pages/CreatePage";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 import "./index.css";
 
@@ -22,6 +24,14 @@ import TermsOfServicePage from "./pages/PolicyPages/TermsOfServicePage";
 import ShippingPolicyPage from "./pages/PolicyPages/ShippingPolicyPage";
 import RefundPolicyPage from "./pages/PolicyPages/RefundPolicyPage";
 
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 10,
+    },
+  },
+});
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -31,11 +41,6 @@ const router = createBrowserRouter([
       { path: "thank-you", element: <ThankYouPage /> },
       { path: "about-us", element: <AboutUsPage /> },
       { path: "contact-us", element: <ContactUsPage /> },
-      {
-        path: "affiliate/:username",
-        element: <CreatePage isAffiliate={true} />,
-        loader: createPageLoader,
-      },
       {
         path: "policies/privacy-policy",
         element: <PrivacyPolicyPage />,
@@ -56,7 +61,11 @@ const router = createBrowserRouter([
         path: "policies/refund-policy",
         element: <RefundPolicyPage />,
       },
-      { index: true, element: <CreatePage />, loader: createPageLoader },
+      {
+        index: true,
+        element: <CreatePage />,
+        loader: createPageLoader(queryClient),
+      },
     ],
   },
 ]);
@@ -69,8 +78,11 @@ mixpanel.init(import.meta.env.VITE_MIXPANEL_PROJECT_TOKEN, {
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <ChakraProvider theme={theme}>
-      <RouterProvider router={router} />
-    </ChakraProvider>
+    <QueryClientProvider client={queryClient}>
+      <ChakraProvider theme={theme}>
+        <RouterProvider router={router} />
+        <ReactQueryDevtools position="bottom-right" />
+      </ChakraProvider>
+    </QueryClientProvider>
   </React.StrictMode>
 );
