@@ -256,6 +256,7 @@ const CheckoutForm = ({
           selectedQuantity,
           selectedImage: imageData,
           isShareable,
+          totalOrderCost,
         };
 
         const docRef = await addDoc(collection(db, "purchases"), purchase);

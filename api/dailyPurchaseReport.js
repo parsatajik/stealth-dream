@@ -23,16 +23,16 @@ if (!admin.apps.length) {
 const db = admin.firestore();
 
 export default async function dailyReport(req, res) {
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  const tomorrow = new Date(today);
-  tomorrow.setDate(today.getDate() + 1);
+  const currentUtcTime = new Date();
+
+  // Get the start time: 24 hours before the current UTC time
+  const startUtcTime = new Date(currentUtcTime.getTime() - 24 * 60 * 60 * 1000);
 
   try {
     const snapshot = await db
       .collection("purchases")
-      .where("date", ">=", today.toISOString())
-      .where("date", "<", tomorrow.toISOString())
+      .where("date", ">=", startUtcTime.toISOString())
+      .where("date", "<", currentUtcTime.toISOString())
       .get();
 
     if (snapshot.empty) {

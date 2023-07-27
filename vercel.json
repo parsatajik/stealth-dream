@@ -19,7 +19,7 @@
   "crons": [
     {
       "path": "/api/dailyPurchaseReport",
-      "schedule": "59 23 * * *"
+      "schedule": "0 5 * * *"
     }
   ],
   "rewrites": [
