@@ -81,7 +81,7 @@ export const loader =
     }
 
     const purchasesImages = data.docs.map((doc) => ({
-      url: doc.data().selectedImage,
+      url: doc.data().webpUrl,
       alt: doc.data().prompt,
     }));
 

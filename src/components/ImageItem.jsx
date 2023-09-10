@@ -15,6 +15,7 @@ import {
   useBreakpointValue,
 } from "@chakra-ui/react";
 import { Fade } from "react-awesome-reveal";
+import { LazyLoadImage } from 'react-lazy-load-image-component';
 
 const ImageItem = ({ image, setDreamInput, handleDesignCreation }) => {
   const [isHovered, setIsHovered] = useState(false);
@@ -45,11 +46,10 @@ const ImageItem = ({ image, setDreamInput, handleDesignCreation }) => {
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
         >
-          <Image
+          <LazyLoadImage
             src={image.url}
             alt={image.alt}
-            objectFit="cover"
-            w="100%"
+            style={{ width: "100%", objectFit: "cover" }}
             onClick={onOpen}
           />
           {isHovered && (

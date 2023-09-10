@@ -1,8 +1,10 @@
 import axios from "axios";
 import admin from "firebase-admin";
+import sharp from "sharp";
 import { promises as fs } from "fs";
 import { tmpdir } from "os";
 import { join } from "path";
+import { v4 as uuidv4 } from 'uuid';
 
 const projectId = process.env.FIREBASE_PROJECT_ID;
 const clientEmail = process.env.FIREBASE_CLIENT_EMAIL;
@@ -27,34 +29,60 @@ export default async function storeImage(req, res) {
       responseType: "arraybuffer",
     });
 
+    // Convert image to WebP format
+    const webpBuffer = await sharp(imageRes.data).webp().toBuffer();
+
     // Write the image data to a temporary file.
     const tempFilePath = join(tmpdir(), `${Date.now()}.png`);
     await fs.writeFile(tempFilePath, imageRes.data);
 
     // Upload image to Firebase Storage
     const bucket = admin.storage().bucket();
-    const file = bucket.file(`${Date.now()}.png`);
 
+    // Store the original image
+    const originalFile = bucket.file(`${Date.now()}.png`);
+    const originalToken = uuidv4();
     await bucket.upload(tempFilePath, {
-      destination: file,
+      destination: originalFile,
       public: true,
       metadata: {
         contentType: "image/png",
-        firebaseStorageDownloadTokens: "initial-token",
+        firebaseStorageDownloadTokens: originalToken,
       },
     });
 
-    // Remove the temporary file.
-    await fs.unlink(tempFilePath);
-
-    // Get public URL for the file
+    // Get public URL for the original file
     const config = {
       action: "read",
       expires: "03-01-2500", // far future
     };
-    const url = await file.getSignedUrl(config);
 
-    res.send({ message: "Image uploaded successfully", url: url[0] });
+    const originalUrl = await originalFile.getSignedUrl(config);
+
+    // Write the WebP image data to a temporary file.
+    const tempWebPFilePath = join(tmpdir(), `${Date.now()}.webp`);
+    await fs.writeFile(tempWebPFilePath, webpBuffer);
+
+    // Upload WebP image to Firebase Storage
+    const webpFile = bucket.file(`${Date.now()}.webp`);
+    const webpToken = uuidv4();
+    await bucket.upload(tempWebPFilePath, {
+      destination: webpFile,
+      public: true,
+      metadata: {
+        contentType: "image/webp",
+        firebaseStorageDownloadTokens: webpToken,
+      },
+    });
+
+    // Get public URL for the WebP file
+    const webpUrl = await webpFile.getSignedUrl(config);
+
+    // Remove the temporary file.
+    await fs.unlink(tempFilePath);
+    await fs.unlink(tempWebPFilePath);
+
+    res.send({ message: "Image uploaded successfully", originalUrl, webpUrl });
   } catch (err) {
     console.log(err);
     res.status(500).send({ error: err });

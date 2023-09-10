@@ -18,9 +18,6 @@ const App = () => {
       alignItems="center"
       bgColor="#fafafc"
     >
-      <PromotionBanner
-        promotionText={`LIMITED TIME ONLY... 20% OFF STORE WIDE!!!`}
-      />
       <Navbar />
       <Outlet />
       <Footer />

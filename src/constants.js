@@ -1,33 +1,33 @@
-import T1 from "./assets/tips/A sea otter with a pearl earring by Johannes Vermeer.png";
-import T2 from "./assets/tips/A cat submarine chimera, digital art.png";
-import T3 from "./assets/tips/Abstract pencil and watercolor art of a lonely robot holding a balloon.png";
-import T4 from "./assets/tips/A bowl of soup that looks like a monster, knitted out of wool.png";
-import T5 from "./assets/tips/Teddy bears shopping for groceries in Japan, ukiyo-e.png";
-import T6 from "./assets/tips/3D render of a pink balloon dog in a violet room.png";
-import T7 from "./assets/tips/A cyberpunk illustration of the San Francisco Golden Gate Bridge, digital art.png";
-import T8 from "./assets/tips/A van Gogh style painting of an American football player.png";
-import T9 from "./assets/tips/A futuristic cyborg poster hanging in a neon lit subway station.png";
-import T10 from "./assets/tips/A photo of a teddy bear on a skateboard in Times Square.png";
-import T11 from "./assets/tips/An expressive oil painting of a basketball player dunking, depicted as an explosion of a nebula.png";
-import T12 from "./assets/tips/Synthwave sports car.png";
-import T13 from "./assets/tips/A stained glass window depicting a robot.png";
-import T14 from "./assets/tips/A bowl of soup that is also a portal to another dimension, digital art.png";
-import T15 from "./assets/tips/A pencil and watercolor drawing of a bright city in the future with flying cars.png";
-import T16 from "./assets/tips/An oil pastel drawing of an annoyed cat in a spaceship.png";
+import T1 from "./assets/tips/A sea otter with a pearl earring by Johannes Vermeer.webp";
+import T2 from "./assets/tips/A cat submarine chimera, digital art.webp";
+import T3 from "./assets/tips/Abstract pencil and watercolor art of a lonely robot holding a balloon.webp";
+import T4 from "./assets/tips/A bowl of soup that looks like a monster, knitted out of wool.webp";
+import T5 from "./assets/tips/Teddy bears shopping for groceries in Japan, ukiyo-e.webp";
+import T6 from "./assets/tips/3D render of a pink balloon dog in a violet room.webp";
+import T7 from "./assets/tips/A cyberpunk illustration of the San Francisco Golden Gate Bridge, digital art.webp";
+import T8 from "./assets/tips/A van Gogh style painting of an American football player.webp";
+import T9 from "./assets/tips/A futuristic cyborg poster hanging in a neon lit subway station.webp";
+import T10 from "./assets/tips/A photo of a teddy bear on a skateboard in Times Square.webp";
+import T11 from "./assets/tips/An expressive oil painting of a basketball player dunking, depicted as an explosion of a nebula.webp";
+import T12 from "./assets/tips/Synthwave sports car.webp";
+import T13 from "./assets/tips/A stained glass window depicting a robot.webp";
+import T14 from "./assets/tips/A bowl of soup that is also a portal to another dimension, digital art.webp";
+import T15 from "./assets/tips/A pencil and watercolor drawing of a bright city in the future with flying cars.webp";
+import T16 from "./assets/tips/An oil pastel drawing of an annoyed cat in a spaceship.webp";
 
-import P1 from "./assets/customerImages/1.png";
-import P2 from "./assets/customerImages/2.png";
-import P3 from "./assets/customerImages/3.png";
-import P4 from "./assets/customerImages/4.png";
-import P5 from "./assets/customerImages/5.png";
-import P6 from "./assets/customerImages/6.png";
-import P7 from "./assets/customerImages/7.png";
-import P8 from "./assets/customerImages/8.png";
-import P9 from "./assets/customerImages/9.png";
-import P10 from "./assets/customerImages/10.png";
-import P11 from "./assets/customerImages/11.png";
-import P12 from "./assets/customerImages/12.png";
-import P13 from "./assets/customerImages/13.png";
+import P1 from "./assets/customerImages/1.webp";
+import P2 from "./assets/customerImages/2.webp";
+import P3 from "./assets/customerImages/3.webp";
+import P4 from "./assets/customerImages/4.webp";
+import P5 from "./assets/customerImages/5.webp";
+import P6 from "./assets/customerImages/6.webp";
+import P7 from "./assets/customerImages/7.webp";
+import P8 from "./assets/customerImages/8.webp";
+import P9 from "./assets/customerImages/9.webp";
+import P10 from "./assets/customerImages/10.webp";
+import P11 from "./assets/customerImages/11.webp";
+import P12 from "./assets/customerImages/12.webp";
+import P13 from "./assets/customerImages/13.webp";
 
 export const TIPS = [
   {
@@ -179,4 +179,4 @@ export const CUSTOMER_IMAGES = [
   P2,
 ];
 
-export const TSHIRT_COST = 32;
+export const TSHIRT_COST = 40;

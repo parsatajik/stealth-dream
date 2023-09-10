@@ -198,6 +198,19 @@ const CheckoutForm = ({
   const handleSubmit = async (event) => {
     event.preventDefault();
 
+    // Check if email, shipping address, and full name are filled out
+    if (!email || !customerInfo.address || !customerInfo.name) {
+      toast({
+        title: "Error",
+        description: "Please fill out all required fields.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+        position: "top",
+      });
+      return;
+    }
+
     setIsLoading(true);
 
     let timeoutId = setTimeout(() => {
@@ -244,7 +257,8 @@ const CheckoutForm = ({
           }
         );
 
-        const imageData = response.data.url;
+        const imageData = response.data.originalUrl;
+        const webpUrl = response.data.webpUrl;
 
         const purchase = {
           date: new Date().toISOString(),
@@ -257,6 +271,7 @@ const CheckoutForm = ({
           selectedImage: imageData,
           isShareable,
           totalOrderCost,
+          webpUrl,
         };
 
         const docRef = await addDoc(collection(db, "purchases"), purchase);
@@ -310,11 +325,6 @@ const CheckoutForm = ({
             Contact info
           </Text>
           <LinkAuthenticationElement
-            options={{
-              defaultValues: {
-                email: "foo@bar.com",
-              },
-            }}
             onChange={(event) => setEmail(event.value.email)}
           />
         </Box>
@@ -357,7 +367,7 @@ const CheckoutForm = ({
           <Text fontSize={inputFontSize}>{`Subtotal (${selectedQuantity} ${
             selectedQuantity === 1 ? "item" : "items"
           })`}</Text>
-          <Text fontSize={inputFontSize}>{`$${totalOrderCost * 1.25}`}</Text>
+          <Text fontSize={inputFontSize}>{`$${totalOrderCost}`}</Text>
         </Stack>
         <Stack
           direction="row"
@@ -447,14 +457,6 @@ const CheckoutForm = ({
             {"Total"}
           </Text>
           <Text fontSize={inputFontSize} fontWeight="bold">
-            <Text
-              as="span"
-              textDecoration="line-through"
-              color="cyan.500"
-              mr="10px"
-            >
-              {`$${totalOrderCost * 1.25} (20% OFF)`}{" "}
-            </Text>{" "}
             {`$${totalOrderCost}`}
           </Text>
         </Stack>
