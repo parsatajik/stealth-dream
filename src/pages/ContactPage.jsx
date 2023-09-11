@@ -10,6 +10,7 @@ import {
   useToast,
   useBreakpointValue,
 } from "@chakra-ui/react";
+import { Helmet } from 'react-helmet';
 import emailjs from "@emailjs/browser";
 
 const ContactUsPage = () => {
@@ -76,6 +77,13 @@ const ContactUsPage = () => {
 
   return (
     <>
+      <Helmet>
+        <title>Contact Artefice - We're Here to Help</title>
+        <meta
+          name="description"
+          content="Have questions or need help? Contact Artefice. We're here to assist you and would love to hear from you."
+        />
+      </Helmet>
       <Text fontSize={headingSize} fontWeight="bold" mb="20px" mt="60px">
         Drop a line!
       </Text>

@@ -45,6 +45,7 @@ import {
   CUSTOMER_IMAGES,
   TSHIRT_COST,
 } from "../constants";
+import { Helmet } from 'react-helmet';
 
 import { useQueryClient } from "@tanstack/react-query";
 
@@ -288,6 +289,13 @@ const CreatePage = () => {
 
   return (
     <>
+      <Helmet>
+        <title>Shop Unique AI-Infused T-Shirts - Artefice</title>
+        <meta
+          name="description"
+          content="Explore our collection of unique, AI-infused t-shirts. Each piece is a one-of-a-kind expression of creativity and individuality."
+        />
+      </Helmet>
       <Text fontSize="2xl" fontWeight="bold" mt="20px" w="80%">
         Dream your design
       </Text>
