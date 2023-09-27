@@ -2,7 +2,7 @@ import React, { useRef, useEffect } from "react";
 import TSHIRT from "../assets/ai-t-shirt.png";
 import WHITE_TSHIRT from "../assets/white-shirt.jpg";
 
-function TShirtMockup({ selectedImage, selectedColor }) {
+function TShirtMockup({ selectedImage, selectedColor, text }) {
   const canvasRef = useRef(null);
   const containerRef = useRef(null);
 
@@ -41,6 +41,11 @@ function TShirtMockup({ selectedImage, selectedColor }) {
               designImg.width * designScale,
               designImg.height * designScale
             );
+
+            // Draw the text on the canvas
+            ctx.font = "30px Arial";
+            ctx.fillStyle = "black";
+            ctx.fillText(text, canvas.width / 3, canvas.height / 1.3);
           };
         }
       };
@@ -52,7 +57,7 @@ function TShirtMockup({ selectedImage, selectedColor }) {
     // add resize event listener
     window.addEventListener("resize", updateSize);
     return () => window.removeEventListener("resize", updateSize);
-  }, [selectedImage, selectedColor]);
+  }, [selectedImage, selectedColor, text]);
 
   return (
     <div ref={containerRef} style={{ width: "100%", height: "100%" }}>

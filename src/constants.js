@@ -1,123 +1,42 @@
-import T1 from "./assets/tips/A sea otter with a pearl earring by Johannes Vermeer.webp";
-import T2 from "./assets/tips/A cat submarine chimera, digital art.webp";
-import T3 from "./assets/tips/Abstract pencil and watercolor art of a lonely robot holding a balloon.webp";
-import T4 from "./assets/tips/A bowl of soup that looks like a monster, knitted out of wool.webp";
-import T5 from "./assets/tips/Teddy bears shopping for groceries in Japan, ukiyo-e.webp";
-import T6 from "./assets/tips/3D render of a pink balloon dog in a violet room.webp";
-import T7 from "./assets/tips/A cyberpunk illustration of the San Francisco Golden Gate Bridge, digital art.webp";
-import T8 from "./assets/tips/A van Gogh style painting of an American football player.webp";
-import T9 from "./assets/tips/A futuristic cyborg poster hanging in a neon lit subway station.webp";
-import T10 from "./assets/tips/A photo of a teddy bear on a skateboard in Times Square.webp";
-import T11 from "./assets/tips/An expressive oil painting of a basketball player dunking, depicted as an explosion of a nebula.webp";
-import T12 from "./assets/tips/Synthwave sports car.webp";
-import T13 from "./assets/tips/A stained glass window depicting a robot.webp";
-import T14 from "./assets/tips/A bowl of soup that is also a portal to another dimension, digital art.webp";
-import T15 from "./assets/tips/A pencil and watercolor drawing of a bright city in the future with flying cars.webp";
-import T16 from "./assets/tips/An oil pastel drawing of an annoyed cat in a spaceship.webp";
+import NONE from "./assets/none-icon.png";
 
-import P1 from "./assets/customerImages/1.webp";
-import P2 from "./assets/customerImages/2.webp";
-import P3 from "./assets/customerImages/3.webp";
-import P4 from "./assets/customerImages/4.webp";
-import P5 from "./assets/customerImages/5.webp";
-import P6 from "./assets/customerImages/6.webp";
-import P7 from "./assets/customerImages/7.webp";
-import P8 from "./assets/customerImages/8.webp";
-import P9 from "./assets/customerImages/9.webp";
-import P10 from "./assets/customerImages/10.webp";
-import P11 from "./assets/customerImages/11.webp";
-import P12 from "./assets/customerImages/12.webp";
-import P13 from "./assets/customerImages/13.webp";
+import DALI from "./assets/artists/dali-icon.webp";
+import KAHLO from "./assets/artists/kahlo-icon.webp";
+import KLIMT from "./assets/artists/klimt-icon.webp";
+import MATISSE from "./assets/artists/matisse-icon.webp";
+import MONET from "./assets/artists/monet-icon.webp";
+import OKEEFFE from "./assets/artists/okeeffe-icon.webp";
+import PICASSO from "./assets/artists/picasso-icon.webp";
+import POLLOCK from "./assets/artists/pollock-icon.webp";
+import VAN_GOGH from "./assets/artists/van-gogh-icon.webp";
+import WARHOL from "./assets/artists/warhol-icon.webp";
+import DA_VINCI from "./assets/artists/da-vinci-icon.webp";
+import HARING from "./assets/artists/haring-icon.webp";
 
-export const TIPS = [
-  {
-    imgSrc: T1,
-    tipText: "Ask for images in the style of your favorite artist.",
-    tipPrompt: "A sea otter with a pearl earring by Johannes Vermeer",
-  },
-  {
-    imgSrc: T2,
-    tipText: "Ask for digital arts.",
-    tipPrompt: "A cat submarine chimera, digital art",
-  },
-  {
-    imgSrc: T3,
-    tipText: "Add more specific details to get exactly what you want.",
-    tipPrompt:
-      "Abstract pencil and watercolor art of a lonely robot holding a balloon",
-  },
-  {
-    imgSrc: T4,
-    tipText: "Ask for abstract or implausible images.",
-    tipPrompt: "A bowl of soup that looks like a monster, knitted out of wool",
-  },
-  {
-    imgSrc: T5,
-    tipText: 'Mention art styles lIke "uklyo-e" or "Impressionist."',
-    tipPrompt: "Teddy bears shopping for groceries in Japan, ukiyo-e",
-  },
-  {
-    imgSrc: T6,
-    tipText: "Ask for 3D renders.",
-    tipPrompt: "3D render of a pink balloon dog in a violet room",
-  },
-  {
-    imgSrc: T7,
-    tipText: 'Add", digital art" for striking and high-quality images.',
-    tipPrompt:
-      "A cyberpunk illustration of the San Francisco Golden Gate Bridge, digital art",
-  },
-  {
-    imgSrc: T8,
-    tipText: "Ask for images in the style of your favorite artist.",
-    tipPrompt: "A van Gogh style painting of an American football player",
-  },
-  {
-    imgSrc: T9,
-    tipText: "Describe the lighting to improve aesthetics.",
-    tipPrompt:
-      "A futuristic cyborg poster hanging in a neon lit subway station",
-  },
-  {
-    imgSrc: T10,
-    tipText: "Include a location as context for the image.",
-    tipPrompt: "A photo of a teddy bear on a skateboard in Times Square",
-  },
-  {
-    imgSrc: T11,
-    tipText: "Combine interesting concepts.",
-    tipPrompt:
-      "An expressive oil painting of a basketball player dunking, depicted as an explosion of a nebula",
-  },
-  {
-    imgSrc: T12,
-    tipText: 'Mention styles like "synthwave" or "cyberpunk."',
-    tipPrompt: "Synthwave sports car",
-  },
-  {
-    imgSrc: T13,
-    tipText:
-      'Ask for contexts like "stained glass window" or "album art cover."',
-    tipPrompt: "A stained glass window depicting a robot",
-  },
-  {
-    imgSrc: T14,
-    tipText: "Ask for abstract or implausible images.",
-    tipPrompt:
-      "A bowl of soup that is also a portal to another dimension, digital art",
-  },
-  {
-    imgSrc: T15,
-    tipText: 'A single word like "bright" or "dark" can have a big impact.',
-    tipPrompt:
-      "A pencil and watercolor drawing of a bright city in the future with flying cars",
-  },
-  {
-    imgSrc: T16,
-    tipText: 'Ask for mediums like "oil pastel" or "pencil and watercolor."',
-    tipPrompt: "An oil pastel drawing of an annoyed cat in a spaceship",
-  },
-];
+import ABSTRACT from "./assets/artStyles/abstract-icon.webp";
+import CUBISM from "./assets/artStyles/cubism-icon.webp";
+import EXPRESSIONISM from "./assets/artStyles/expressionism-icon.webp";
+import FAUVISM from "./assets/artStyles/fauvism-icon.webp";
+import IMPRESSIONISM from "./assets/artStyles/impressionism-icon.webp";
+import MINIMALISM from "./assets/artStyles/minimalism-icon.webp";
+import POP_ART from "./assets/artStyles/pop-art-icon.webp";
+import REALISM from "./assets/artStyles/realism-icon.webp";
+import RENAISSANCE from "./assets/artStyles/renaissance-icon.webp";
+import ROCOCO from "./assets/artStyles/rococo-icon.webp";
+import SURREALISM from "./assets/artStyles/surrealism-icon.webp";
+import UKIYO_E from "./assets/artStyles/ukiyo-e-icon.webp";
+import DIGITAL_ART from "./assets/artStyles/digital-art-icon.webp";
+
+import STAINED_GLASS from "./assets/textures/stained-glass-icon.webp";
+import AZULEJO from "./assets/textures/azulejo-icon.webp";
+import CERAMIC from "./assets/textures/ceramic-icon.webp";
+import CLAY from "./assets/textures/clay-icon.webp";
+import AMIGURUMI from "./assets/textures/amigurumi-icon.webp";
+import KNITTING from "./assets/textures/knitting-icon.webp";
+import ORIGAMI from "./assets/textures/origami-icon.webp";
+import PAPIER_MACHE from "./assets/textures/papier-mache-icon.webp";
+import PORCELAIN from "./assets/textures/porcelain-icon.webp";
+import EMBROIDERY from "./assets/textures/embroidery-icon.webp";
 
 export const COLORS = [
   {
@@ -163,20 +82,154 @@ export const SURPRISE_ME_PROMPTS = [
   "teddy bears shopping for groceries in Japan, ukiyo-e",
 ];
 
-export const CUSTOMER_IMAGES = [
-  P1,
-  P13,
-  P3,
-  P4,
-  P5,
-  P6,
-  P7,
-  P8,
-  P9,
-  P10,
-  P11,
-  P12,
-  P2,
+export const ART_STYLES = [
+  {
+    name: "Cubism",
+    img: CUBISM,
+  },
+  {
+    name: "Expressionism",
+    img: EXPRESSIONISM,
+  },
+  {
+    name: "Fauvism",
+    img: FAUVISM,
+  },
+
+  {
+    name: "Pop Art",
+    img: POP_ART,
+  },
+  {
+    name: "Realism",
+    img: REALISM,
+  },
+  {
+    name: "Renaissance",
+    img: RENAISSANCE,
+  },
+  {
+    name: "Rococo",
+    img: ROCOCO,
+  },
+  {
+    name: "Surrealism",
+    img: SURREALISM,
+  },
+  {
+    name: "Ukiyo-e",
+    img: UKIYO_E,
+  },
+  {
+    name: "Abstract",
+    img: ABSTRACT,
+  },
+  {
+    name: "Digital Art",
+    img: DIGITAL_ART,
+  },
+  {
+    name: "Minimalism",
+    img: MINIMALISM,
+  },
+  {
+    name: "Impressionism",
+    img: IMPRESSIONISM,
+  },
+];
+
+export const ARTISTS = [
+  {
+    name: "Da Vinci",
+    img: DA_VINCI,
+  },
+  {
+    name: "Van Gogh",
+    img: VAN_GOGH,
+  },
+  {
+    name: "Picasso",
+    img: PICASSO,
+  },
+  {
+    name: "Monet",
+    img: MONET,
+  },
+  {
+    name: "Matisse",
+    img: MATISSE,
+  },
+  {
+    name: "Dali",
+    img: DALI,
+  },
+  {
+    name: "Warhol",
+    img: WARHOL,
+  },
+  {
+    name: "Kahlo",
+    img: KAHLO,
+  },
+  {
+    name: "Pollock",
+    img: POLLOCK,
+  },
+  {
+    name: "O'Keeffe",
+    img: OKEEFFE,
+  },
+  {
+    name: "Haring",
+    img: HARING,
+  },
+  {
+    name: "Klimt",
+    img: KLIMT,
+  },
+];
+
+export const TEXTURES = [
+  {
+    name: "Stained Glass",
+    img: STAINED_GLASS,
+  },
+  {
+    name: "Azulejo",
+    img: AZULEJO,
+  },
+  {
+    name: "Ceramic",
+    img: CERAMIC,
+  },
+  {
+    name: "Clay",
+    img: CLAY,
+  },
+  {
+    name: "Amigurumi",
+    img: AMIGURUMI,
+  },
+  {
+    name: "Knitting",
+    img: KNITTING,
+  },
+  {
+    name: "Origami",
+    img: ORIGAMI,
+  },
+  {
+    name: "Porcelain",
+    img: PORCELAIN,
+  },
+  {
+    name: "Embroidery",
+    img: EMBROIDERY,
+  },
+  {
+    name: "Papier Mache",
+    img: PAPIER_MACHE,
+  },
 ];
 
 export const TSHIRT_COST = 40;

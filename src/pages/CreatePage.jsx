@@ -23,10 +23,9 @@ import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { useLoaderData } from "react-router-dom";
 import CheckoutForm from "../components/CheckoutForm";
-import Tip from "../components/Tip";
 import TShirtMockup from "../components/TShirtMockUp";
 import Gallery from "../components/Gallery";
-import Slider from "../components/Slider";
+import StyleCustomizer from "../components/StyleCustomizer";
 import mixpanel from "mixpanel-browser";
 import { db } from "../firebase";
 import {
@@ -37,17 +36,8 @@ import {
   limit,
   orderBy,
 } from "firebase/firestore";
-import {
-  COLORS,
-  SIZES,
-  SURPRISE_ME_PROMPTS,
-  TIPS,
-  CUSTOMER_IMAGES,
-  TSHIRT_COST,
-} from "../constants";
-import { Helmet } from 'react-helmet';
-
-import { useQueryClient } from "@tanstack/react-query";
+import { COLORS, SIZES, SURPRISE_ME_PROMPTS, TSHIRT_COST } from "../constants";
+import { Helmet } from "react-helmet";
 
 const getRandomElement = (arr) => {
   return arr[Math.floor(Math.random() * arr.length)];
@@ -63,7 +53,7 @@ const purchasesQuery = query(
   collection(db, "purchases"),
   where("isShareable", "==", true),
   orderBy("date", "desc"),
-  limit(50)
+  limit(28)
 );
 
 const purchaseListQuery = {
@@ -93,7 +83,6 @@ const CreatePage = () => {
   const [dreamInput, setDreamInput] = useState("");
   const [requestActive, setRequestActive] = useState(false);
   const [dreamImgs, setDreamImgs] = useState([]);
-  const [tip, setTip] = useState(getRandomElement(TIPS));
   const [selectedImg, setSelectedImg] = useState(null);
   const [selectedColor, setSelectedColor] = useState("black");
   const [selectedSize, setSelectedSize] = useState("");
@@ -102,6 +91,11 @@ const CreatePage = () => {
   const [stripePaymentIntentId, setStripePaymentIntentId] = useState("");
   const [shareCreation, setShareCreation] = useState(true);
   const [totalOrderCost, setTotalOrderCost] = useState(TSHIRT_COST);
+  const [selectedArtStyle, setSelectedArtStyle] = useState("");
+  const [selectedArtist, setSelectedArtist] = useState("");
+  const [selectedTexture, setSelectedTexture] = useState("");
+  const [text, setText] = useState("");
+  const [expandedAccordionIndices, setExpandedAccordionIndices] = useState([0]);
 
   const loaderData = useLoaderData();
   const toast = useToast();
@@ -148,6 +142,7 @@ const CreatePage = () => {
   });
 
   const isSearchAllowed = () => {
+    return true;
     const today = new Date().toDateString();
     const searchHistory = JSON.parse(
       localStorage.getItem("searchHistory") || "{}"
@@ -179,12 +174,22 @@ const CreatePage = () => {
     return false;
   };
 
+  const dreamFinalizer = (dream) => {
+    let prompt = dream;
+    if (selectedArtStyle) prompt += `, in the stlye of ${selectedArtStyle}`;
+    if (selectedArtist) prompt += `, by ${selectedArtist}`;
+    if (selectedTexture) prompt += `, {${selectedTexture}}`;
+    return prompt;
+  };
+
   const fetchImage = async (dream) => {
     try {
+      const prompt = dreamFinalizer(dream);
+
       const response = await axios.post(
         `/api/generateImage`,
         {
-          dream: dream,
+          dream: prompt,
         },
         {
           headers: {
@@ -218,7 +223,6 @@ const CreatePage = () => {
       if (!requestActive && isSearchAllowed()) {
         setDreamImgs([]);
         setRequestActive(true);
-        setTip(getRandomElement(TIPS));
       }
     } catch (e) {
       console.log(e);
@@ -262,6 +266,7 @@ const CreatePage = () => {
   useEffect(() => {
     if (dreamImgs?.length && requestActive) {
       setRequestActive(false);
+      setExpandedAccordionIndices([]);
     }
   }, [dreamImgs]);
 
@@ -343,16 +348,6 @@ const CreatePage = () => {
           >
             {dreamInput.length ? "Make My Shirt!" : "Surprise Me!"}
           </Button>
-
-          {/* <Button
-            onClick={handleDesignCreation}
-            w="100%"
-            fontSize={inputFontSize}
-            size={makeMyShirtButtonSize}
-            mt="10px"
-          >
-            {dreamImgs.length ? "Try again!" : makeMyShirtButtonText}
-          </Button> */}
         </Box>
       ) : (
         <InputGroup size="lg" mt="20px" maxW="80%" boxShadow="md">
@@ -397,12 +392,6 @@ const CreatePage = () => {
             isIndeterminate
             colorScheme="cyan"
           />
-
-          <Tip
-            imgSrc={tip.imgSrc}
-            tipText={tip.tipText}
-            tipPrompt={tip.tipPrompt}
-          />
         </Box>
       )}
 
@@ -413,7 +402,7 @@ const CreatePage = () => {
           gridTemplateColumns={dreamImagesGridTemplateColumns}
           maxW="80%"
           mt="40px"
-          mb="40px"
+          mb="20px"
         >
           {dreamImgs?.map((img, i) => (
             <Image
@@ -432,14 +421,30 @@ const CreatePage = () => {
         </Box>
       )}
 
+      <StyleCustomizer
+        selectedArtStyle={selectedArtStyle}
+        setSelectedArtStyle={setSelectedArtStyle}
+        selectedArtist={selectedArtist}
+        setSelectedArtist={setSelectedArtist}
+        selectedTexture={selectedTexture}
+        setSelectedTexture={setSelectedTexture}
+        expandedAccordionIndices={expandedAccordionIndices}
+        setExpandedAccordionIndices={setExpandedAccordionIndices}
+      />
+
       {selectedImg && (
         <>
-          <Text fontSize="2xl" fontWeight="bold" mb="5px" w="80%">
+          <Text fontSize="2xl" fontWeight="bold" mt="20px" mb="5px" w="80%">
             Customize your t-shirt
           </Text>
           <Text fontSize="md" w="80%" as="i" color="blackAlpha.600" mb="20px">
             Choose your size and color
           </Text>
+          <input
+            type="text"
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+          />
           <Box
             maxW="80%"
             w="100%"
@@ -450,6 +455,7 @@ const CreatePage = () => {
               w="80%"
               selectedImage={selectedImg}
               selectedColor={selectedColor}
+              text={text}
             />
             <Box
               padding="20px"
@@ -600,11 +606,6 @@ const CreatePage = () => {
       )}
 
       <Box maxW="80%" mt="40px" w="100%">
-        <Text fontSize="2xl" fontWeight="bold" mb="20px" w="80%">
-          Our Work
-        </Text>
-        <Slider images={CUSTOMER_IMAGES} />
-
         <Text fontSize="2xl" fontWeight="bold" mb="20px" w="80%">
           Recent Creations
         </Text>

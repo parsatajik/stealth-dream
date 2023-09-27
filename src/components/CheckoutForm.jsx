@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Button,
@@ -51,11 +51,40 @@ const CheckoutForm = ({
   const [couponWasUsed, setCouponWasUsed] = useState(false);
   const [affiliate, setAffiliate] = useState("");
   const [affiliateWasUsed, setAffiliateWasUsed] = useState(false);
+  const [shippingCost] = useState(0);
 
   const stripe = useStripe();
   const elements = useElements();
   const navigate = useNavigate();
   const toast = useToast();
+
+  useEffect(() => {
+    const fetchShippingEstimate = async () => {
+      try {
+        const response = await axios.post(
+          `/api/estimateShipping`,
+          {
+            toAddress: customerInfo.address,
+            weight: {
+              value: 166 + 150 * selectedQuantity,
+              unit: "grams",
+            },
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        console.log(response.data)
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    fetchShippingEstimate();
+  }, [customerInfo.address]);
 
   const inputFontSize = useBreakpointValue({
     base: "sm",
@@ -376,7 +405,9 @@ const CheckoutForm = ({
           mb="15px"
         >
           <Text fontSize={inputFontSize}>{"Shipping"}</Text>
-          <Text fontSize={inputFontSize}>{"FREE"}</Text>
+          <Text fontSize={inputFontSize}>
+            {shippingCost > 0 ? shippingCost : "TBD"}
+          </Text>
         </Stack>
         <Stack
           direction="row"

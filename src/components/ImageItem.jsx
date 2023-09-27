@@ -66,6 +66,7 @@ const ImageItem = ({ image, setDreamInput, handleDesignCreation }) => {
               padding="20px"
               color="blackAlpha.800"
               onClick={onOpen}
+              textOverflow="ellipsis"
             >
               {image.alt}
             </Text>

@@ -2,9 +2,9 @@ import React from "react";
 import { Box } from "@chakra-ui/react";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
-import PromotionBanner from "./components/PromotionBanner";
 import { Outlet, ScrollRestoration } from "react-router-dom";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import Feedback from "feeder-react-feedback"; // import Feedback component
+import "feeder-react-feedback/dist/feeder-react-feedback.css"; // import stylesheet
 
 const App = () => {
   return (
@@ -18,6 +18,7 @@ const App = () => {
       alignItems="center"
       bgColor="#fafafc"
     >
+      <Feedback projectId="651328d4ea2e6700025cb00c" />
       <Navbar />
       <Outlet />
       <Footer />

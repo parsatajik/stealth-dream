@@ -31,6 +31,7 @@
     "dotenv": "^16.3.1",
     "emailjs": "^4.0.2",
     "emailjs-com": "^3.2.0",
+    "feeder-react-feedback": "^0.0.6",
     "firebase": "^9.22.2",
     "firebase-admin": "^11.9.0",
     "framer-motion": "^10.0.1",
