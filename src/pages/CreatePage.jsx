@@ -142,7 +142,6 @@ const CreatePage = () => {
   });
 
   const isSearchAllowed = () => {
-    return true;
     const today = new Date().toDateString();
     const searchHistory = JSON.parse(
       localStorage.getItem("searchHistory") || "{}"
