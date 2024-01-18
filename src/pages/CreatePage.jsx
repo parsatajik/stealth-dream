@@ -96,7 +96,7 @@ const CreatePage = () => {
   const [selectedTexture, setSelectedTexture] = useState("");
   const [text, setText] = useState("");
   const [expandedAccordionIndices, setExpandedAccordionIndices] = useState([0]);
-  const [dalleVersion, setDalleVersion] = useState("dalle-2");
+  const [dalleVersion, setDalleVersion] = useState("dall-e-2");
 
   const loaderData = useLoaderData();
   const toast = useToast();
@@ -203,7 +203,7 @@ const CreatePage = () => {
         prompt: dream,
       });
 
-      return [response.data[0].url];
+      return response.data.map((img) => img.url);
     } catch (e) {
       console.error(e);
       toast({
@@ -327,8 +327,8 @@ const CreatePage = () => {
           border="none"
           fontWeight="bold"
         >
-          <option value="dalle-2">dall-e-2</option>
-          <option value="dalle-3">dall-e-3</option>
+          <option value="dall-e-2">dall-e-2</option>
+          <option value="dall-e-3">dall-e-3</option>
         </Select>
       </Stack>
 
