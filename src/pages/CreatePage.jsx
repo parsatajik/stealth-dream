@@ -96,6 +96,7 @@ const CreatePage = () => {
   const [selectedTexture, setSelectedTexture] = useState("");
   const [text, setText] = useState("");
   const [expandedAccordionIndices, setExpandedAccordionIndices] = useState([0]);
+  const [dalleVersion, setDalleVersion] = useState("dalle-2");
 
   const loaderData = useLoaderData();
   const toast = useToast();
@@ -177,7 +178,7 @@ const CreatePage = () => {
     let prompt = dream;
     if (selectedArtStyle) prompt += `, in the stlye of ${selectedArtStyle}`;
     if (selectedArtist) prompt += `, by ${selectedArtist}`;
-    if (selectedTexture) prompt += `, {${selectedTexture}}`;
+    if (selectedTexture) prompt += `, ${selectedTexture}`;
     return prompt;
   };
 
@@ -189,6 +190,7 @@ const CreatePage = () => {
         `/api/generateImage`,
         {
           dream: prompt,
+          dalleVersion,
         },
         {
           headers: {
@@ -201,7 +203,7 @@ const CreatePage = () => {
         prompt: dream,
       });
 
-      return response.data.data;
+      return [response.data[0].url];
     } catch (e) {
       console.error(e);
       toast({
@@ -309,10 +311,25 @@ const CreatePage = () => {
           Start with a detailed description
         </Text>
         {!isMobile && (
-          <Button size="xs" onClick={handleSurpriseMe}>
-            Surprise me
-          </Button>
+          <>
+            <Button size="xs" onClick={handleSurpriseMe}>
+              Surprise me
+            </Button>
+          </>
         )}
+
+        <Select
+          size="xs"
+          onChange={(e) => setDalleVersion(e.target.value)}
+          borderRadius="5px"
+          w="fit-content"
+          bgColor="gray.100"
+          border="none"
+          fontWeight="bold"
+        >
+          <option value="dalle-2">dall-e-2</option>
+          <option value="dalle-3">dall-e-3</option>
+        </Select>
       </Stack>
 
       {isMobile ? (
@@ -406,13 +423,13 @@ const CreatePage = () => {
           {dreamImgs?.map((img, i) => (
             <Image
               key={i}
-              src={img.url}
+              src={img}
               border={
-                !selectedImg || selectedImg !== img?.url ? "" : "2px solid cyan"
+                !selectedImg || selectedImg !== img ? "" : "2px solid cyan"
               }
-              opacity={!selectedImg || selectedImg !== img?.url ? "1" : "0.7"}
+              opacity={!selectedImg || selectedImg !== img ? "1" : "0.7"}
               _hover={{ opacity: "0.7", border: "2px solid cyan" }}
-              onClick={() => setSelectedImg(img.url)}
+              onClick={() => setSelectedImg(img)}
               onContextMenu={handleRightClick}
               alt={`AI Dream Image ${i}`}
             />
