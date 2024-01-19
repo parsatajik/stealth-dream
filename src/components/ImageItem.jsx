@@ -52,24 +52,23 @@ const ImageItem = ({ image, setDreamInput, handleDesignCreation }) => {
             style={{ width: "100%", objectFit: "cover" }}
             onClick={onOpen}
           />
-          {isHovered && (
-            <Text
-              position="absolute"
-              bottom="0"
-              left="0"
-              p="2"
-              bgColor="white"
-              opacity="90%"
-              width="full"
-              height="full"
-              fontSize={textFontSize}
-              padding="20px"
-              color="blackAlpha.800"
-              onClick={onOpen}
-            >
-              {image.alt}
-            </Text>
-          )}
+          <Text
+            position="absolute"
+            bottom="0"
+            left="0"
+            p="2"
+            bgColor="white"
+            opacity={isHovered ? "90%" : "0%"}
+            width="full"
+            height="full"
+            fontSize={textFontSize}
+            padding="20px"
+            color="blackAlpha.800"
+            onClick={onOpen}
+            transition="opacity 0.3s ease"
+          >
+            {image.alt}
+          </Text>
         </Box>
       </Fade>
       <Modal isOpen={isOpen} onClose={onClose} isCentered>
