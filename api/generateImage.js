@@ -3,7 +3,7 @@ import OpenAI from "openai";
 const openai = new OpenAI({ apiKey: process.env.OPENAI_TOKEN });
 
 export const config = {
-  maxDuration: 120,
+  maxDuration: 60,
   api: {
     bodyParser: {
       sizeLimit: "10mb",
@@ -27,7 +27,7 @@ export default async function generateImage(req, res) {
       prompt: dream,
       size: dalleVersion === "dall-e-2" ? "1024x1024" : "1024x1792",
       n: dalleVersion === "dall-e-2" ? 3 : 1,
-      timeout: 120000,
+      timeout: 60000,
     });
 
     if (!image?.data) {
