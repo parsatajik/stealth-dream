@@ -6,7 +6,7 @@ import {
   Text,
   useBreakpointValue,
 } from "@chakra-ui/react";
-import { Helmet } from 'react-helmet';
+import { Helmet } from "react-helmet";
 import SocialIcons from "../components/SocialIcons";
 
 const ThankYouPage = () => {

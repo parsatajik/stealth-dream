@@ -10,7 +10,7 @@ import {
   useToast,
   useBreakpointValue,
 } from "@chakra-ui/react";
-import { Helmet } from 'react-helmet';
+import { Helmet } from "react-helmet";
 import emailjs from "@emailjs/browser";
 
 const ContactUsPage = () => {

@@ -15,7 +15,7 @@ import {
   useBreakpointValue,
 } from "@chakra-ui/react";
 import { Fade } from "react-awesome-reveal";
-import { LazyLoadImage } from 'react-lazy-load-image-component';
+import { LazyLoadImage } from "react-lazy-load-image-component";
 
 const ImageItem = ({ image, setDreamInput, handleDesignCreation }) => {
   const [isHovered, setIsHovered] = useState(false);

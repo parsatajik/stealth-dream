@@ -1,14 +1,20 @@
-import axios from 'axios';
+import axios from "axios";
 
 export default async (req, res) => {
   const { orderNumber } = req.query;
 
   try {
     const response = await axios({
-      method: 'get',
+      method: "get",
       url: `https://ssapi.shipstation.com/shipments?orderNumber=${orderNumber}`,
       headers: {
-        'Authorization': 'Basic ' + Buffer.from(process.env.SHIPSTATION_API_KEY + ':' + process.env.SHIPSTATION_API_SECRET).toString('base64'),
+        Authorization:
+          "Basic " +
+          Buffer.from(
+            process.env.SHIPSTATION_API_KEY +
+              ":" +
+              process.env.SHIPSTATION_API_SECRET
+          ).toString("base64"),
       },
     });
 

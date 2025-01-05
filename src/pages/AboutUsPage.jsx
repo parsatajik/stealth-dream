@@ -1,7 +1,6 @@
 import React from "react";
 import { Box, Image, useBreakpoint } from "@chakra-ui/react";
-import { Helmet } from 'react-helmet';
-
+import { Helmet } from "react-helmet";
 
 import A1 from "../assets/aboutUs/about1.png";
 import A2 from "../assets/aboutUs/about2.png";

@@ -4,7 +4,7 @@ import sharp from "sharp";
 import { promises as fs } from "fs";
 import { tmpdir } from "os";
 import { join } from "path";
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
 
 const projectId = process.env.FIREBASE_PROJECT_ID;
 const clientEmail = process.env.FIREBASE_CLIENT_EMAIL;

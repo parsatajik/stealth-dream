@@ -8,9 +8,9 @@ const firebaseConfig = {
   storageBucket: "artefice-bloorsoft.appspot.com",
   messagingSenderId: "244209947040",
   appId: "1:244209947040:web:247853eaaecc4450e894c5",
-  measurementId: "G-89KSWYHQ53"
+  measurementId: "G-89KSWYHQ53",
 };
 
 const app = initializeApp(firebaseConfig);
 
-export const db = getFirestore(app)
+export const db = getFirestore(app);
